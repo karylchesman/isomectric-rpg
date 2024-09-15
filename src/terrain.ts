@@ -19,12 +19,19 @@ export class Terrain extends Mesh<PlaneGeometry, MeshStandardMaterial> {
   get width() {
     return this._width;
   }
+  set width(value: number) {
+    this._width = value;
+  }
   get height() {
     return this._height;
+  }
+  set height(value: number) {
+    this._height = value;
   }
 
   createGeometry() {
     this.geometry?.dispose();
     this.geometry = new PlaneGeometry(this._width, this._height);
+    this.position.set(this._width / 2, 0, this._height / 2);
   }
 }

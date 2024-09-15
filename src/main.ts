@@ -51,3 +51,6 @@ const terrain_folder = gui.addFolder("Terrain");
 terrain_folder.add(terrain, "width", 1, 20, 1).name("Width");
 terrain_folder.add(terrain, "height", 1, 20, 1).name("Height");
 terrain_folder.addColor(terrain.material, "color").name("Color");
+terrain_folder.onChange(() => {
+  terrain.createGeometry();
+});
