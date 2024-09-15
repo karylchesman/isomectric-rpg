@@ -1,7 +1,7 @@
 # To Do List
 
-- [] World
-  - [ ] Terrain - Flat plane
+- [ ] World
+  - [x] Terrain - Flat plane
   - [ ] Trees
   - [ ] Rocks
   - [ ] Bushes
