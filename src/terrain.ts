@@ -4,14 +4,17 @@ import {
   Mesh,
   MeshStandardMaterial,
   PlaneGeometry,
+  SphereGeometry,
 } from "three";
 
 export class Terrain extends Mesh {
   private _width: number;
   private _height: number;
-  private _tree_count: number;
   private _terrain: Mesh<PlaneGeometry, MeshStandardMaterial> | undefined;
+  private _tree_count: number;
   private _trees: Group | undefined;
+  private _rocks: Group | undefined;
+  private _rock_count: number;
 
   constructor(width: number, height: number) {
     super();
@@ -19,9 +22,11 @@ export class Terrain extends Mesh {
     this._width = width;
     this._height = height;
     this._tree_count = 10;
+    this._rock_count = 20;
 
     this.createTerrain();
     this.createTrees();
+    this.createRocks();
   }
 
   get width() {
@@ -55,7 +60,6 @@ export class Terrain extends Mesh {
     }
     const terrain_material = new MeshStandardMaterial({
       color: 0x50a000,
-      wireframe: true,
     });
     const terrain_geometry = new PlaneGeometry(
       this._width,
@@ -92,6 +96,39 @@ export class Terrain extends Mesh {
         Math.floor(this._height * Math.random()) + 0.5
       );
       this._trees.add(tree_mesh);
+    }
+  }
+
+  createRocks() {
+    const min_rock_radius = 0.1;
+    const max_rock_radius = 0.3;
+    const min_rock_height = 0.5;
+    const max_rock_height = 0.8;
+
+    const rock_material = new MeshStandardMaterial({
+      color: 0xb0b0b0,
+      flatShading: true,
+    });
+
+    this._rocks = new Group();
+    this.add(this._rocks);
+
+    this._rocks.clear();
+
+    for (let i = 0; i < this._rock_count; i++) {
+      const radius =
+        min_rock_radius + Math.random() * (max_rock_radius - min_rock_radius);
+      const height =
+        min_rock_height + Math.random() * (max_rock_height - min_rock_height);
+      const rock_geometry = new SphereGeometry(radius, 6, 5);
+      const rock_mesh = new Mesh(rock_geometry, rock_material);
+      rock_mesh.position.set(
+        Math.floor(this._width * Math.random()) + 0.5,
+        0,
+        Math.floor(this._height * Math.random()) + 0.5
+      );
+      rock_mesh.scale.y = height;
+      this._rocks.add(rock_mesh);
     }
   }
 }
