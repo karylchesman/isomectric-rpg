@@ -13,8 +13,10 @@ export class Terrain extends Mesh {
   private _terrain: Mesh<PlaneGeometry, MeshStandardMaterial> | undefined;
   private _tree_count: number;
   private _trees: Group | undefined;
-  private _rocks: Group | undefined;
   private _rock_count: number;
+  private _rocks: Group | undefined;
+  private _bush_count: number;
+  private _bushes: Group | undefined;
 
   constructor(width: number, height: number) {
     super();
@@ -23,10 +25,12 @@ export class Terrain extends Mesh {
     this._height = height;
     this._tree_count = 10;
     this._rock_count = 20;
+    this._bush_count = 10;
 
     this.createTerrain();
     this.createTrees();
     this.createRocks();
+    this.createBushes();
   }
 
   get width() {
@@ -129,6 +133,34 @@ export class Terrain extends Mesh {
       );
       rock_mesh.scale.y = height;
       this._rocks.add(rock_mesh);
+    }
+  }
+
+  createBushes() {
+    const min_bush_radius = 0.1;
+    const max_bush_radius = 0.3;
+
+    const bush_material = new MeshStandardMaterial({
+      color: 0x80a040,
+      flatShading: true,
+    });
+
+    this._bushes = new Group();
+    this.add(this._bushes);
+
+    this._bushes.clear();
+
+    for (let i = 0; i < this._bush_count; i++) {
+      const radius =
+        min_bush_radius + Math.random() * (max_bush_radius - min_bush_radius);
+      const bush_geometry = new SphereGeometry(radius, 8, 8);
+      const bush_mesh = new Mesh(bush_geometry, bush_material);
+      bush_mesh.position.set(
+        Math.floor(this._width * Math.random()) + 0.5,
+        radius,
+        Math.floor(this._height * Math.random()) + 0.5
+      );
+      this._bushes.add(bush_mesh);
     }
   }
 }
