@@ -51,15 +51,27 @@ export class World extends Mesh {
   set height(value: number) {
     this._height = value;
   }
+  get terrain() {
+    if (!this._terrain) throw Error("Terrain is not set");
+    return this._terrain;
+  }
   get tree_count() {
     return this._tree_count;
   }
   set tree_count(value: number) {
     this._tree_count = value;
   }
-  get terrain() {
-    if (!this._terrain) throw Error("Terrain is not set");
-    return this._terrain;
+  get rock_count() {
+    return this._rock_count;
+  }
+  set rock_count(value: number) {
+    this._rock_count = value;
+  }
+  get bush_count() {
+    return this._bush_count;
+  }
+  set bush_count(value: number) {
+    this._bush_count = value;
   }
 
   generate() {
