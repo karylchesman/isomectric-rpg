@@ -7,7 +7,7 @@ import {
   SphereGeometry,
 } from "three";
 
-export class Terrain extends Mesh {
+export class World extends Mesh {
   private _width: number;
   private _height: number;
   private _terrain: Mesh<PlaneGeometry, MeshStandardMaterial> | undefined;
