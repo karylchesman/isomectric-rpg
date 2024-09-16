@@ -14,17 +14,20 @@ renderer.setAnimationLoop(animate);
 document.body.querySelector("#app")!.appendChild(renderer.domElement);
 
 const scene = new THREE.Scene();
+
 const camera = new THREE.PerspectiveCamera(
   75,
   window.innerWidth / window.innerHeight,
   0.1,
   1000
 );
-const controls = new OrbitControls(camera, renderer.domElement);
+camera.position.set(10, 2, 10);
 
 const terrain = new Terrain(10, 10);
 scene.add(terrain);
+
 const sun = new THREE.DirectionalLight();
+sun.intensity = 3;
 sun.position.set(1, 2, 3);
 scene.add(sun);
 
@@ -32,7 +35,7 @@ const ambient = new THREE.AmbientLight();
 ambient.intensity = 0.5;
 scene.add(ambient);
 
-camera.position.z = 5;
+const controls = new OrbitControls(camera, renderer.domElement);
 controls.update();
 
 function animate() {
