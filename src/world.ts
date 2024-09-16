@@ -5,9 +5,12 @@ import {
   MeshStandardMaterial,
   PlaneGeometry,
   SphereGeometry,
+  Vector2,
 } from "three";
 
 export class World extends Mesh {
+  #object_map = new Map();
+
   private _width: number;
   private _height: number;
   private _terrain: Mesh<PlaneGeometry, MeshStandardMaterial> | undefined;
@@ -94,12 +97,14 @@ export class World extends Mesh {
 
     for (let i = 0; i < this._tree_count; i++) {
       const tree_mesh = new Mesh(tree_geometry, tree_material);
-      tree_mesh.position.set(
-        Math.floor(this._width * Math.random()) + 0.5,
-        tree_height / 2,
-        Math.floor(this._height * Math.random()) + 0.5
+      const coords = new Vector2(
+        Math.floor(this._width * Math.random()),
+        Math.floor(this._height * Math.random())
       );
+      if (this.#object_map.has(`${coords.x}-${coords.y}`)) continue;
+      tree_mesh.position.set(coords.x + 0.5, tree_height / 2, coords.y + 0.5);
       this._trees.add(tree_mesh);
+      this.#object_map.set(`${coords.x}-${coords.y}`, tree_mesh);
     }
   }
 
@@ -126,13 +131,15 @@ export class World extends Mesh {
         min_rock_height + Math.random() * (max_rock_height - min_rock_height);
       const rock_geometry = new SphereGeometry(radius, 6, 5);
       const rock_mesh = new Mesh(rock_geometry, rock_material);
-      rock_mesh.position.set(
-        Math.floor(this._width * Math.random()) + 0.5,
-        0,
-        Math.floor(this._height * Math.random()) + 0.5
+      const coords = new Vector2(
+        Math.floor(this._width * Math.random()),
+        Math.floor(this._height * Math.random())
       );
+      if (this.#object_map.has(`${coords.x}-${coords.y}`)) continue;
+      rock_mesh.position.set(coords.x + 0.5, 0, coords.y + 0.5);
       rock_mesh.scale.y = height;
       this._rocks.add(rock_mesh);
+      this.#object_map.set(`${coords.x}-${coords.y}`, rock_mesh);
     }
   }
 
@@ -155,12 +162,14 @@ export class World extends Mesh {
         min_bush_radius + Math.random() * (max_bush_radius - min_bush_radius);
       const bush_geometry = new SphereGeometry(radius, 8, 8);
       const bush_mesh = new Mesh(bush_geometry, bush_material);
-      bush_mesh.position.set(
-        Math.floor(this._width * Math.random()) + 0.5,
-        radius,
-        Math.floor(this._height * Math.random()) + 0.5
+      const coords = new Vector2(
+        Math.floor(this._width * Math.random()),
+        Math.floor(this._height * Math.random())
       );
+      if (this.#object_map.has(`${coords.x}-${coords.y}`)) continue;
+      bush_mesh.position.set(coords.x + 0.5, radius, coords.y + 0.5);
       this._bushes.add(bush_mesh);
+      this.#object_map.set(`${coords.x}-${coords.y}`, bush_mesh);
     }
   }
 }
