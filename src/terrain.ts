@@ -51,9 +51,18 @@ export class Terrain extends Mesh {
     if (this._terrain) {
       this._terrain.geometry.dispose();
       this._terrain.material.dispose();
+      this.remove(this._terrain);
     }
-    const terrain_material = new MeshStandardMaterial({ color: 0x50a000 });
-    const terrain_geometry = new PlaneGeometry(this._width, this._height);
+    const terrain_material = new MeshStandardMaterial({
+      color: 0x50a000,
+      wireframe: true,
+    });
+    const terrain_geometry = new PlaneGeometry(
+      this._width,
+      this._height,
+      this._width,
+      this._height
+    );
     this._terrain = new Mesh(terrain_geometry, terrain_material);
     this._terrain.rotation.x = -Math.PI / 2;
     this._terrain.position.set(this._width / 2, 0, this._height / 2);
@@ -78,9 +87,9 @@ export class Terrain extends Mesh {
     for (let i = 0; i < this._tree_count; i++) {
       const tree_mesh = new Mesh(tree_geometry, tree_material);
       tree_mesh.position.set(
-        this._width * Math.random(),
+        Math.floor(this._width * Math.random()) + 0.5,
         tree_height / 2,
-        this._height * Math.random()
+        Math.floor(this._height * Math.random()) + 0.5
       );
       this._trees.add(tree_mesh);
     }

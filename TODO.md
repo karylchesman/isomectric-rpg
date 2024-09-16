@@ -2,7 +2,7 @@
 
 - [ ] World
   - [x] Terrain - Flat plane
-  - [ ] Trees
+  - [x] Trees
   - [ ] Rocks
   - [ ] Bushes
   - [ ] Prevent trees/rocks/bushes from intersecting each other
