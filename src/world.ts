@@ -15,11 +15,11 @@ export class World extends Mesh {
   private _height: number;
   private _terrain: Mesh<PlaneGeometry, MeshStandardMaterial> | undefined;
   private _tree_count: number;
-  private _trees: Group | undefined;
+  private _trees: Group;
   private _rock_count: number;
-  private _rocks: Group | undefined;
+  private _rocks: Group;
   private _bush_count: number;
-  private _bushes: Group | undefined;
+  private _bushes: Group;
 
   constructor(width: number, height: number) {
     super();
@@ -29,11 +29,14 @@ export class World extends Mesh {
     this._tree_count = 10;
     this._rock_count = 20;
     this._bush_count = 10;
+    this._trees = new Group();
+    this.add(this._trees);
+    this._rocks = new Group();
+    this.add(this._rocks);
+    this._bushes = new Group();
+    this.add(this._bushes);
 
-    this.createTerrain();
-    this.createTrees();
-    this.createRocks();
-    this.createBushes();
+    this.generate();
   }
 
   get width() {
@@ -59,12 +62,48 @@ export class World extends Mesh {
     return this._terrain;
   }
 
-  createTerrain() {
+  generate() {
+    this.clearWorld();
+    this.createTerrain();
+    this.createTrees();
+    this.createRocks();
+    this.createBushes();
+  }
+
+  clearWorld() {
     if (this._terrain) {
       this._terrain.geometry.dispose();
       this._terrain.material.dispose();
       this.remove(this._terrain);
     }
+    if (this._trees) {
+      this._trees.children.forEach((tree) => {
+        if (!(tree instanceof Mesh)) return;
+        tree.geometry?.dispose();
+        tree.material?.dispose();
+      });
+      this._trees.clear();
+    }
+    if (this._rocks) {
+      this._trees.children.forEach((rock) => {
+        if (!(rock instanceof Mesh)) return;
+        rock.geometry?.dispose();
+        rock.material?.dispose();
+      });
+      this._rocks.clear();
+    }
+    if (this._bushes) {
+      this._bushes.children.forEach((bush) => {
+        if (!(bush instanceof Mesh)) return;
+        bush.geometry?.dispose();
+        bush.material?.dispose();
+      });
+      this._bushes.clear();
+    }
+    this.#object_map.clear();
+  }
+
+  createTerrain() {
     const terrain_material = new MeshStandardMaterial({
       color: 0x50a000,
     });
@@ -90,11 +129,6 @@ export class World extends Mesh {
       flatShading: true,
     });
 
-    this._trees = new Group();
-    this.add(this._trees);
-
-    this._trees.clear();
-
     for (let i = 0; i < this._tree_count; i++) {
       const tree_mesh = new Mesh(tree_geometry, tree_material);
       const coords = new Vector2(
@@ -118,11 +152,6 @@ export class World extends Mesh {
       color: 0xb0b0b0,
       flatShading: true,
     });
-
-    this._rocks = new Group();
-    this.add(this._rocks);
-
-    this._rocks.clear();
 
     for (let i = 0; i < this._rock_count; i++) {
       const radius =
@@ -151,11 +180,6 @@ export class World extends Mesh {
       color: 0x80a040,
       flatShading: true,
     });
-
-    this._bushes = new Group();
-    this.add(this._bushes);
-
-    this._bushes.clear();
 
     for (let i = 0; i < this._bush_count; i++) {
       const radius =
