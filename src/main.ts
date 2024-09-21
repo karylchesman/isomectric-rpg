@@ -23,7 +23,7 @@ const camera = new THREE.PerspectiveCamera(
   0.1,
   1000
 );
-camera.position.set(10, 2, 10);
+camera.position.set(0, 2, 0);
 
 const world = new World(10, 10);
 scene.add(world);
@@ -41,6 +41,7 @@ ambient.intensity = 0.5;
 scene.add(ambient);
 
 const controls = new OrbitControls(camera, renderer.domElement);
+controls.target.set(5, 0, 5);
 controls.update();
 
 function animate() {
