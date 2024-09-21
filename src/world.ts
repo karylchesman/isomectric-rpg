@@ -8,7 +8,7 @@ import {
   Vector2,
 } from "three";
 
-export class World extends Mesh {
+export class World extends Group {
   #object_map = new Map();
 
   private _width: number;

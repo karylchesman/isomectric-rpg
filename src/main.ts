@@ -3,6 +3,7 @@ import { OrbitControls } from "three/addons/controls/OrbitControls.js";
 import Stats from "three/addons/libs/stats.module.js";
 import { GUI } from "three/addons/libs/lil-gui.module.min.js";
 import { World } from "./world";
+import { Player } from "./player";
 
 const gui = new GUI();
 const stats = new Stats();
@@ -26,6 +27,9 @@ camera.position.set(10, 2, 10);
 
 const world = new World(10, 10);
 scene.add(world);
+
+const player = new Player();
+scene.add(player);
 
 const sun = new THREE.DirectionalLight();
 sun.intensity = 3;
