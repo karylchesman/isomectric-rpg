@@ -11,6 +11,7 @@ document.body.querySelector("#app")!.appendChild(stats.dom);
 const renderer = new THREE.WebGLRenderer();
 renderer.setSize(window.innerWidth, window.innerHeight);
 renderer.setAnimationLoop(animate);
+renderer.setPixelRatio(devicePixelRatio);
 document.body.querySelector("#app")!.appendChild(renderer.domElement);
 
 const scene = new THREE.Scene();
