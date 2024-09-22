@@ -4,16 +4,24 @@ import {
   Mesh,
   MeshStandardMaterial,
   PlaneGeometry,
+  RepeatWrapping,
+  SRGBColorSpace,
   SphereGeometry,
+  TextureLoader,
   Vector2,
 } from "three";
+
+const texture_loader = new TextureLoader();
+const grid_texture = texture_loader.load("../public/textures/grid.png");
+
+export type TTerrain = Mesh<PlaneGeometry, MeshStandardMaterial>;
 
 export class World extends Group {
   #object_map = new Map();
 
   private _width: number;
   private _height: number;
-  private _terrain: Mesh<PlaneGeometry, MeshStandardMaterial> | undefined;
+  private _terrain: TTerrain | undefined;
   private _tree_count: number;
   private _trees: Group;
   private _rock_count: number;
@@ -116,9 +124,12 @@ export class World extends Group {
   }
 
   createTerrain() {
-    const terrain_material = new MeshStandardMaterial({
-      color: 0x50a000,
-    });
+    grid_texture.repeat = new Vector2(this._width, this._height);
+    grid_texture.wrapS = RepeatWrapping;
+    grid_texture.wrapT = RepeatWrapping;
+    grid_texture.colorSpace = SRGBColorSpace;
+
+    const terrain_material = new MeshStandardMaterial({ map: grid_texture });
     const terrain_geometry = new PlaneGeometry(
       this._width,
       this._height,
@@ -126,6 +137,7 @@ export class World extends Group {
       this._height
     );
     this._terrain = new Mesh(terrain_geometry, terrain_material);
+    this._terrain.name = "Terrain";
     this._terrain.rotation.x = -Math.PI / 2;
     this._terrain.position.set(this._width / 2, 0, this._height / 2);
     this.add(this._terrain);

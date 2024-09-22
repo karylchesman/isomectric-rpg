@@ -28,7 +28,7 @@ camera.position.set(0, 2, 0);
 const world = new World(10, 10);
 scene.add(world);
 
-const player = new Player();
+const player = new Player(camera, world.terrain);
 scene.add(player);
 
 const sun = new THREE.DirectionalLight();
