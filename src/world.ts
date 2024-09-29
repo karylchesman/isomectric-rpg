@@ -19,6 +19,13 @@ export type TTerrain = Mesh<PlaneGeometry, MeshStandardMaterial>;
 export class World extends Group {
   #object_map = new Map();
 
+  /**
+   * Returns the key for the object map given a set of coordinates
+   */
+  getObjectMapKey(coords: Vector2) {
+    return `${coords.x}-${coords.y}`;
+  }
+
   private _width: number;
   private _height: number;
   private _terrain: TTerrain | undefined;
@@ -154,15 +161,16 @@ export class World extends Group {
     });
 
     for (let i = 0; i < this._tree_count; i++) {
-      const tree_mesh = new Mesh(tree_geometry, tree_material);
       const coords = new Vector2(
         Math.floor(this._width * Math.random()),
         Math.floor(this._height * Math.random())
       );
-      if (this.#object_map.has(`${coords.x}-${coords.y}`)) continue;
+      if (this.#object_map.has(this.getObjectMapKey(coords))) continue;
+      const tree_mesh = new Mesh(tree_geometry, tree_material);
+      tree_mesh.name = `Tree-(${coords.x},${coords.y})`;
       tree_mesh.position.set(coords.x + 0.5, tree_height / 2, coords.y + 0.5);
       this._trees.add(tree_mesh);
-      this.#object_map.set(`${coords.x}-${coords.y}`, tree_mesh);
+      this.#object_map.set(this.getObjectMapKey(coords), tree_mesh);
     }
   }
 
@@ -182,17 +190,18 @@ export class World extends Group {
         min_rock_radius + Math.random() * (max_rock_radius - min_rock_radius);
       const height =
         min_rock_height + Math.random() * (max_rock_height - min_rock_height);
-      const rock_geometry = new SphereGeometry(radius, 6, 5);
-      const rock_mesh = new Mesh(rock_geometry, rock_material);
       const coords = new Vector2(
         Math.floor(this._width * Math.random()),
         Math.floor(this._height * Math.random())
       );
-      if (this.#object_map.has(`${coords.x}-${coords.y}`)) continue;
+      if (this.#object_map.has(this.getObjectMapKey(coords))) continue;
+      const rock_geometry = new SphereGeometry(radius, 6, 5);
+      const rock_mesh = new Mesh(rock_geometry, rock_material);
+      rock_mesh.name = `Rock-(${coords.x},${coords.y})`;
       rock_mesh.position.set(coords.x + 0.5, 0, coords.y + 0.5);
       rock_mesh.scale.y = height;
       this._rocks.add(rock_mesh);
-      this.#object_map.set(`${coords.x}-${coords.y}`, rock_mesh);
+      this.#object_map.set(this.getObjectMapKey(coords), rock_mesh);
     }
   }
 
@@ -208,16 +217,24 @@ export class World extends Group {
     for (let i = 0; i < this._bush_count; i++) {
       const radius =
         min_bush_radius + Math.random() * (max_bush_radius - min_bush_radius);
-      const bush_geometry = new SphereGeometry(radius, 8, 8);
-      const bush_mesh = new Mesh(bush_geometry, bush_material);
       const coords = new Vector2(
         Math.floor(this._width * Math.random()),
         Math.floor(this._height * Math.random())
       );
-      if (this.#object_map.has(`${coords.x}-${coords.y}`)) continue;
+      if (this.#object_map.has(this.getObjectMapKey(coords))) continue;
+      const bush_geometry = new SphereGeometry(radius, 8, 8);
+      const bush_mesh = new Mesh(bush_geometry, bush_material);
+      bush_mesh.name = `Bush-(${coords.x},${coords.y})`;
       bush_mesh.position.set(coords.x + 0.5, radius, coords.y + 0.5);
       this._bushes.add(bush_mesh);
-      this.#object_map.set(`${coords.x}-${coords.y}`, bush_mesh);
+      this.#object_map.set(this.getObjectMapKey(coords), bush_mesh);
     }
+  }
+
+  /**
+   * Returns the object at `coords` if one exists, otherwise returns null
+   */
+  getObject(coords: Vector2): Mesh | null {
+    return this.#object_map.get(this.getObjectMapKey(coords)) ?? null;
   }
 }

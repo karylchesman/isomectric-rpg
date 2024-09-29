@@ -6,17 +6,18 @@ import {
   Raycaster,
   Vector2,
 } from "three";
-import { TTerrain } from "./world";
+import { World } from "./world";
+import { search } from "./path-finding";
 
 export class Player extends Mesh {
   private _raycaster = new Raycaster();
   private _camera: Camera;
-  private _terrain: TTerrain;
+  private _world: World;
 
-  constructor(camera: Camera, terrain: TTerrain) {
+  constructor(camera: Camera, world: World) {
     super();
     this._camera = camera;
-    this._terrain = terrain;
+    this._world = world;
     this.geometry = new CapsuleGeometry(0.25, 0.5);
     this.material = new MeshStandardMaterial({ color: 0x4040c0 });
     this.position.set(5.5, 0.5, 5.5);
@@ -30,14 +31,15 @@ export class Player extends Mesh {
     );
     this._raycaster.setFromCamera(coords, this._camera);
 
-    const intersections = this._raycaster.intersectObjects([this._terrain]);
+    const intersections = this._raycaster.intersectObject(this._world.terrain);
 
     if (intersections.length > 0) {
-      this.position.set(
-        Math.floor(intersections[0].point.x) + 0.5,
-        0.5,
-        Math.floor(intersections[0].point.z) + 0.5
+      const selected_coords = new Vector2(
+        Math.floor(intersections[0].point.x),
+        Math.floor(intersections[0].point.z)
       );
+      this.position.set(selected_coords.x + 0.5, 0.5, selected_coords.y + 0.5);
+      search(selected_coords, selected_coords, this._world);
     }
   }
 }
