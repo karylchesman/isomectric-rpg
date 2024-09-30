@@ -34,12 +34,17 @@ export class Player extends Mesh {
     const intersections = this._raycaster.intersectObject(this._world.terrain);
 
     if (intersections.length > 0) {
+      const player_coords = new Vector2(
+        Math.floor(this.position.x),
+        Math.floor(this.position.z)
+      );
+
       const selected_coords = new Vector2(
         Math.floor(intersections[0].point.x),
         Math.floor(intersections[0].point.z)
       );
-      this.position.set(selected_coords.x + 0.5, 0.5, selected_coords.y + 0.5);
-      search(selected_coords, selected_coords, this._world);
+
+      search(player_coords, selected_coords, this._world);
     }
   }
 }
