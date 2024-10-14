@@ -10,10 +10,11 @@
 - [ ] Player Character
   - [x] Draw character on the screen
   - [x] Point and click controls
-  - [ ] Navigation (ignore obstacles)
+  - [x] Navigation (without obstacles)
+    - [ ] Dijkstra's Algorithm
     - [ ] A\* algorithm
-    - [ ] world -> get(x,z)
-  - [ ] Improved Navigation (obstacle avoidance)
+    - [x] world -> get(x,z)
+  - [x] Improved Navigation (obstacle avoidance)
 - [ ] Enemies
   - [ ] Draw enemies on screen (static)
   - [ ] Patrol
