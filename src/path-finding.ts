@@ -27,21 +27,35 @@ export function search(
   const frontier = [start];
   cost.set(getKey(start), 0);
 
+  let counter = 0;
+
   while (frontier.length > 0) {
     // Get the square with the shortest distance metric
     // Dijkstra - distance to origin
     // A* - distance to origin  + estimated distance to destination
     frontier.sort((v1, v2) => {
-      const d1 = start.manhattanDistanceTo(v1);
-      const d2 = start.manhattanDistanceTo(v2);
-      return d1 - d2;
+      // Dijkstra Approach
+      // const d1 = start.manhattanDistanceTo(v1);
+      // const d2 = start.manhattanDistanceTo(v2);
+      // return d1 - d2;
+
+      // A* Approach
+      const g1 = start.manhattanDistanceTo(v1);
+      const g2 = start.manhattanDistanceTo(v2);
+      const h1 = v1.manhattanDistanceTo(end);
+      const h2 = v2.manhattanDistanceTo(end);
+      const f1 = g1 + h1;
+      const f2 = g2 + h2;
+      return f1 - f2;
     });
 
     const candidate = frontier.shift();
     if (!candidate) break;
+    counter++;
 
     // Did we find the end goal?
     if (candidate.x === end.x && candidate.y === end.y) {
+      console.log(`Path found (visited ${counter} candidates)`);
       path_found = true;
       break;
     }
