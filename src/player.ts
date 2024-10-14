@@ -20,7 +20,7 @@ export class Player extends Mesh {
     this._world = world;
     this.geometry = new CapsuleGeometry(0.25, 0.5);
     this.material = new MeshStandardMaterial({ color: 0x4040c0 });
-    this.position.set(5.5, 0.5, 5.5);
+    this.position.set(1.5, 0.5, 5.5);
     window.addEventListener("mousedown", this.onMouseDown.bind(this));
   }
 

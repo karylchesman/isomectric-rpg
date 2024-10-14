@@ -97,6 +97,9 @@ function getNeighbors(coords: Vector2, world: World, visited: Set<string>) {
     neighbors.push(new Vector2(coords.x, coords.y + 1));
   }
 
-  // Exclude any squares that are already visited and returns the others
-  return neighbors.filter((coords) => !visited.has(getKey(coords)));
+  // Exclude any squares that are already visited, as well
+  // as any squares that are occupied
+  return neighbors
+    .filter((coords) => !visited.has(getKey(coords)))
+    .filter((coords) => !world.getObject(coords));
 }
