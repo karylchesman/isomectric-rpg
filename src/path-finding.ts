@@ -9,11 +9,17 @@ function getKey(coords: Vector2) {
  * Finds the path between the start and end point (if one exists)
  * @returns an array of coordinates that make up the path
  */
-export function search(start: Vector2, end: Vector2, world: World) {
+export function search(
+  start: Vector2,
+  end: Vector2,
+  world: World
+): Vector2[] | null {
   // If the end is equal to the start, skip searching
   if (start.x === end.x && start.y === end.y) return [];
 
+  let path_found = false;
   const max_search_distance = 20;
+  const came_from = new Map();
   const visited = new Set<string>();
   const frontier = [start];
 
@@ -29,11 +35,10 @@ export function search(start: Vector2, end: Vector2, world: World) {
 
     const candidate = frontier.shift();
     if (!candidate) break;
-    console.log(candidate);
 
     // Did we find the end goal?
     if (candidate.x === end.x && candidate.y === end.y) {
-      console.log("Found the end!");
+      path_found = true;
       break;
     }
 
@@ -47,7 +52,29 @@ export function search(start: Vector2, end: Vector2, world: World) {
     // Search the neighbors of the square
     const neighbors = getNeighbors(candidate, world, visited);
     frontier.push(...neighbors);
+
+    // Mark which square each neighbor came from
+    neighbors.forEach((neighbor) => {
+      came_from.set(getKey(neighbor), candidate);
+    });
   }
+
+  if (!path_found) return null;
+
+  // Reconstruct the path
+  let current_node = end;
+  const path = [current_node];
+
+  while (getKey(current_node) !== getKey(start)) {
+    const prev = came_from.get(getKey(current_node));
+    if (!prev) continue;
+    path.push(prev);
+    current_node = prev;
+  }
+
+  path.reverse();
+  path.shift();
+  return path;
 }
 
 function getNeighbors(coords: Vector2, world: World, visited: Set<string>) {

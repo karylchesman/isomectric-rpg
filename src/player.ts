@@ -44,7 +44,8 @@ export class Player extends Mesh {
         Math.floor(intersections[0].point.z)
       );
 
-      search(player_coords, selected_coords, this._world);
+      const path = search(player_coords, selected_coords, this._world);
+      console.log(path);
     }
   }
 }
