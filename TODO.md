@@ -7,14 +7,15 @@
   - [x] Bushes
   - [x] Prevent trees/rocks/bushes from intersecting each other
   - [x] Add controls to UI for world
-- [ ] Player Character
+- [x] Player Character
   - [x] Draw character on the screen
   - [x] Point and click controls
   - [x] Navigation (without obstacles)
-    - [ ] Dijkstra's Algorithm
-    - [ ] A\* algorithm
+    - [x] Dijkstra's Algorithm
+    - [x] A\* algorithm
     - [x] world -> get(x,z)
   - [x] Improved Navigation (obstacle avoidance)
+- [ ] Actions
 - [ ] Enemies
   - [ ] Draw enemies on screen (static)
   - [ ] Patrol
