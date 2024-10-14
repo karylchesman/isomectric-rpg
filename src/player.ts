@@ -15,6 +15,9 @@ export class Player extends Mesh {
   private _raycaster = new Raycaster();
   private _camera: Camera;
   private _world: World;
+  private _path: Vector2[] = [];
+  private _path_index = 0;
+  private _path_updater: number | null = null;
 
   constructor(camera: Camera, world: World) {
     super();
@@ -46,17 +49,35 @@ export class Player extends Mesh {
         Math.floor(intersections[0].point.z)
       );
 
-      const path = search(player_coords, selected_coords, this._world);
+      clearInterval(this._path_updater ?? undefined);
 
+      // Find path from player's current position to the selected square
+      this._path = search(player_coords, selected_coords, this._world) ?? [];
+
+      // If no path found, return early
+      if (!this._path.length) return;
+
+      // DEBUG: Show the path as breadcrumbs
       this._world.path.clear();
-
-      if (path === null) return;
-
-      path?.forEach((coords) => {
+      this._path.forEach((coords) => {
         const node = new Mesh(new SphereGeometry(0.1), new MeshBasicMaterial());
         node.position.set(coords.x + 0.5, 0, coords.y + 0.5);
         this._world.path.add(node);
       });
+
+      // Trigger interval function to update player's position
+      this._path_index = 0;
+      this._path_updater = setInterval(this.updatePosition.bind(this), 500);
     }
+  }
+
+  updatePosition() {
+    if (this._path_index === this._path?.length) {
+      clearInterval(this._path_updater ?? undefined);
+      return;
+    }
+
+    const current_square = this._path[this._path_index++];
+    this.position.set(current_square.x + 0.5, 0.5, current_square.y + 0.5);
   }
 }
