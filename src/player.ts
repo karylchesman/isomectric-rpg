@@ -2,8 +2,10 @@ import {
   Camera,
   CapsuleGeometry,
   Mesh,
+  MeshBasicMaterial,
   MeshStandardMaterial,
   Raycaster,
+  SphereGeometry,
   Vector2,
 } from "three";
 import { World } from "./world";
@@ -45,7 +47,16 @@ export class Player extends Mesh {
       );
 
       const path = search(player_coords, selected_coords, this._world);
-      console.log(path);
+
+      this._world.path.clear();
+
+      if (path === null) return;
+
+      path?.forEach((coords) => {
+        const node = new Mesh(new SphereGeometry(0.1), new MeshBasicMaterial());
+        node.position.set(coords.x + 0.5, 0, coords.y + 0.5);
+        this._world.path.add(node);
+      });
     }
   }
 }

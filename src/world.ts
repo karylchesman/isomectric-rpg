@@ -19,6 +19,8 @@ export type TTerrain = Mesh<PlaneGeometry, MeshStandardMaterial>;
 export class World extends Group {
   #object_map = new Map();
 
+  path: Group;
+
   /**
    * Returns the key for the object map given a set of coordinates
    */
@@ -50,6 +52,9 @@ export class World extends Group {
     this.add(this._rocks);
     this._bushes = new Group();
     this.add(this._bushes);
+
+    this.path = new Group();
+    this.add(this.path);
 
     this.generate();
   }
