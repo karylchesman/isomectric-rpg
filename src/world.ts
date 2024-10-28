@@ -9,7 +9,12 @@ import {
   SphereGeometry,
   TextureLoader,
   Vector2,
+  Vector3,
 } from "three";
+import { Bush } from "./objects/Bush";
+import { GameObject } from "./objects/GameObject";
+import { Rock } from "./objects/Rock";
+import { Tree } from "./objects/Tree";
 
 const texture_loader = new TextureLoader();
 const grid_texture = texture_loader.load("../public/textures/grid.png");
@@ -24,8 +29,8 @@ export class World extends Group {
   /**
    * Returns the key for the object map given a set of coordinates
    */
-  getObjectMapKey(coords: Vector2) {
-    return `${coords.x}-${coords.y}`;
+  getObjectMapKey(coords: Vector3) {
+    return `${coords.x}-${coords.y}-${coords.z}`;
   }
 
   private _width: number;
@@ -108,30 +113,11 @@ export class World extends Group {
       this._terrain.material.dispose();
       this.remove(this._terrain);
     }
-    if (this._trees) {
-      this._trees.children.forEach((tree) => {
-        if (!(tree instanceof Mesh)) return;
-        tree.geometry?.dispose();
-        tree.material?.dispose();
-      });
-      this._trees.clear();
-    }
-    if (this._rocks) {
-      this._trees.children.forEach((rock) => {
-        if (!(rock instanceof Mesh)) return;
-        rock.geometry?.dispose();
-        rock.material?.dispose();
-      });
-      this._rocks.clear();
-    }
-    if (this._bushes) {
-      this._bushes.children.forEach((bush) => {
-        if (!(bush instanceof Mesh)) return;
-        bush.geometry?.dispose();
-        bush.material?.dispose();
-      });
-      this._bushes.clear();
-    }
+
+    this._trees.clear();
+    this._rocks.clear();
+    this._bushes.clear();
+
     this.#object_map.clear();
   }
 
@@ -156,90 +142,56 @@ export class World extends Group {
   }
 
   createTrees() {
-    const tree_radius = 0.2;
-    const tree_height = 1;
-
-    const tree_geometry = new ConeGeometry(tree_radius, tree_height, 8);
-    const tree_material = new MeshStandardMaterial({
-      color: 0x305010,
-      flatShading: true,
-    });
-
     for (let i = 0; i < this._tree_count; i++) {
-      const coords = new Vector2(
+      const coords = new Vector3(
         Math.floor(this._width * Math.random()),
+        0,
         Math.floor(this._height * Math.random())
       );
-      if (this.#object_map.has(this.getObjectMapKey(coords))) continue;
-      const tree_mesh = new Mesh(tree_geometry, tree_material);
-      tree_mesh.name = `Tree-(${coords.x},${coords.y})`;
-      tree_mesh.position.set(coords.x + 0.5, tree_height / 2, coords.y + 0.5);
-      this._trees.add(tree_mesh);
-      this.#object_map.set(this.getObjectMapKey(coords), tree_mesh);
+      const tree = new Tree(coords);
+      this.addObject(tree, coords, this._trees);
     }
   }
 
   createRocks() {
-    const min_rock_radius = 0.1;
-    const max_rock_radius = 0.3;
-    const min_rock_height = 0.5;
-    const max_rock_height = 0.8;
-
-    const rock_material = new MeshStandardMaterial({
-      color: 0xb0b0b0,
-      flatShading: true,
-    });
-
     for (let i = 0; i < this._rock_count; i++) {
-      const radius =
-        min_rock_radius + Math.random() * (max_rock_radius - min_rock_radius);
-      const height =
-        min_rock_height + Math.random() * (max_rock_height - min_rock_height);
-      const coords = new Vector2(
+      const coords = new Vector3(
         Math.floor(this._width * Math.random()),
+        0,
         Math.floor(this._height * Math.random())
       );
-      if (this.#object_map.has(this.getObjectMapKey(coords))) continue;
-      const rock_geometry = new SphereGeometry(radius, 6, 5);
-      const rock_mesh = new Mesh(rock_geometry, rock_material);
-      rock_mesh.name = `Rock-(${coords.x},${coords.y})`;
-      rock_mesh.position.set(coords.x + 0.5, 0, coords.y + 0.5);
-      rock_mesh.scale.y = height;
-      this._rocks.add(rock_mesh);
-      this.#object_map.set(this.getObjectMapKey(coords), rock_mesh);
+      const rock = new Rock(coords);
+      this.addObject(rock, coords, this._rocks);
     }
   }
 
   createBushes() {
-    const min_bush_radius = 0.1;
-    const max_bush_radius = 0.3;
-
-    const bush_material = new MeshStandardMaterial({
-      color: 0x80a040,
-      flatShading: true,
-    });
-
     for (let i = 0; i < this._bush_count; i++) {
-      const radius =
-        min_bush_radius + Math.random() * (max_bush_radius - min_bush_radius);
-      const coords = new Vector2(
+      const coords = new Vector3(
         Math.floor(this._width * Math.random()),
+        0,
         Math.floor(this._height * Math.random())
       );
-      if (this.#object_map.has(this.getObjectMapKey(coords))) continue;
-      const bush_geometry = new SphereGeometry(radius, 8, 8);
-      const bush_mesh = new Mesh(bush_geometry, bush_material);
-      bush_mesh.name = `Bush-(${coords.x},${coords.y})`;
-      bush_mesh.position.set(coords.x + 0.5, radius, coords.y + 0.5);
-      this._bushes.add(bush_mesh);
-      this.#object_map.set(this.getObjectMapKey(coords), bush_mesh);
+      const bush = new Bush(coords);
+      this.addObject(bush, coords, this._bushes);
     }
+  }
+
+  /**
+   * Adds an object to the world at the specified coordinates unless
+   * an object already exists at those coordinates
+   */
+  addObject(object: GameObject, coords: Vector3, group: Group) {
+    if (this.#object_map.has(this.getObjectMapKey(coords))) return false;
+    group.add(object);
+    this.#object_map.set(this.getObjectMapKey(coords), object);
+    return true;
   }
 
   /**
    * Returns the object at `coords` if one exists, otherwise returns null
    */
-  getObject(coords: Vector2): Mesh | null {
+  getObject(coords: Vector3): Mesh | null {
     return this.#object_map.get(this.getObjectMapKey(coords)) ?? null;
   }
 }
