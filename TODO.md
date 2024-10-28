@@ -17,12 +17,12 @@
   - [x] Improved Navigation (obstacle avoidance)
 - [ ] Actions
   - [x] Refactoring / Reorganization
+  - [x] Implementing the base framework
+  - [x] GameObject
+    - [x] Player (Human/Computer Player)
+    - [x] Trees / Rocks / Bushes
   - [ ] Implementing the base Action class
     - [ ] MovementAction
-  - [ ] Implementing the base framework
-    - [x] GameObject
-      - [ ] Player (Human/Computer Player)
-      - [x] Trees / Rocks / Bushes
   - [ ] Asynchronous Input
     - [ ] Selecting a target square
     - [ ] Selecting a target object

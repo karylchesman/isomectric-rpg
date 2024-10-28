@@ -11,8 +11,12 @@ import {
 } from "three";
 import { World } from "./world";
 import { search } from "./path-finding";
+import { GameObject } from "./objects/GameObject";
 
-export class Player extends Mesh {
+const PLAYER_GEOMETRY = new CapsuleGeometry(0.25, 0.5);
+const PLAYER_MATERIAL = new MeshStandardMaterial({ color: 0x4040c0 });
+
+export class Player extends GameObject {
   private _raycaster = new Raycaster();
   private _camera: Camera;
   private _world: World;
@@ -20,14 +24,23 @@ export class Player extends Mesh {
   private _path_index = 0;
   private _path_updater: number | null = null;
 
-  constructor(camera: Camera, world: World) {
-    super();
+  constructor(coords: Vector3, camera: Camera, world: World) {
+    super(coords, PLAYER_GEOMETRY, PLAYER_MATERIAL);
+
+    this.moveTo(coords);
+
     this._camera = camera;
     this._world = world;
-    this.geometry = new CapsuleGeometry(0.25, 0.5);
-    this.material = new MeshStandardMaterial({ color: 0x4040c0 });
-    this.position.set(1.5, 0.5, 5.5);
     window.addEventListener("mousedown", this.onMouseDown.bind(this));
+  }
+
+  moveTo(coords: Vector3) {
+    this.coords = coords;
+    this.position.set(
+      this.coords.x + 0.5,
+      this.coords.y + 0.5,
+      this.coords.z + 0.5
+    );
   }
 
   onMouseDown(event: MouseEvent) {
@@ -81,6 +94,6 @@ export class Player extends Mesh {
     }
 
     const current_square = this._path[this._path_index++];
-    this.position.set(current_square.x + 0.5, 0.5, current_square.z + 0.5);
+    this.moveTo(current_square);
   }
 }
