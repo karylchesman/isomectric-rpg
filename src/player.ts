@@ -7,6 +7,7 @@ import {
   Raycaster,
   SphereGeometry,
   Vector2,
+  Vector3,
 } from "three";
 import { World } from "./world";
 import { search } from "./path-finding";
@@ -15,7 +16,7 @@ export class Player extends Mesh {
   private _raycaster = new Raycaster();
   private _camera: Camera;
   private _world: World;
-  private _path: Vector2[] = [];
+  private _path: Vector3[] = [];
   private _path_index = 0;
   private _path_updater: number | null = null;
 
@@ -39,13 +40,15 @@ export class Player extends Mesh {
     const intersections = this._raycaster.intersectObject(this._world.terrain);
 
     if (intersections.length > 0) {
-      const player_coords = new Vector2(
+      const player_coords = new Vector3(
         Math.floor(this.position.x),
+        Math.floor(this.position.y),
         Math.floor(this.position.z)
       );
 
-      const selected_coords = new Vector2(
+      const selected_coords = new Vector3(
         Math.floor(intersections[0].point.x),
+        0,
         Math.floor(intersections[0].point.z)
       );
 
@@ -61,7 +64,7 @@ export class Player extends Mesh {
       this._world.path.clear();
       this._path.forEach((coords) => {
         const node = new Mesh(new SphereGeometry(0.1), new MeshBasicMaterial());
-        node.position.set(coords.x + 0.5, 0, coords.y + 0.5);
+        node.position.set(coords.x + 0.5, 0, coords.z + 0.5);
         this._world.path.add(node);
       });
 
@@ -78,6 +81,6 @@ export class Player extends Mesh {
     }
 
     const current_square = this._path[this._path_index++];
-    this.position.set(current_square.x + 0.5, 0.5, current_square.y + 0.5);
+    this.position.set(current_square.x + 0.5, 0.5, current_square.z + 0.5);
   }
 }

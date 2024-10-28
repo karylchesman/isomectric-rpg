@@ -1,23 +1,24 @@
-import { Vector2 } from "three";
+import { Vector3 } from "three";
+import { getObjectMapKey } from "./utils";
 import { World } from "./world";
 
 type CostMap = Map<string, number>;
-
-function getKey(coords: Vector2) {
-  return `${coords.x}-${coords.y}`;
-}
 
 /**
  * Finds the path between the start and end point (if one exists)
  * @returns an array of coordinates that make up the path
  */
 export function search(
-  start: Vector2,
-  end: Vector2,
+  start: Vector3,
+  end: Vector3,
   world: World
-): Vector2[] | null {
+): Vector3[] | null {
   // If the end is equal to the start, skip searching
-  if (start.x === end.x && start.y === end.y) return [];
+  if (start.equals(end)) return [];
+
+  console.log(
+    `Searching for path from (${start.x}, ${start.z}) to (${end.x}, ${end.z})`
+  );
 
   let path_found = false;
   const max_search_distance = 20;
@@ -25,7 +26,7 @@ export function search(
   const came_from = new Map();
   const cost: CostMap = new Map();
   const frontier = [start];
-  cost.set(getKey(start), 0);
+  cost.set(getObjectMapKey(start), 0);
 
   let counter = 0;
 
@@ -54,7 +55,7 @@ export function search(
     counter++;
 
     // Did we find the end goal?
-    if (candidate.x === end.x && candidate.y === end.y) {
+    if (candidate.equals(end)) {
       console.log(`Path found (visited ${counter} candidates)`);
       path_found = true;
       break;
@@ -70,7 +71,7 @@ export function search(
 
     // Mark which square each neighbor came from
     neighbors.forEach((neighbor) => {
-      came_from.set(getKey(neighbor), candidate);
+      came_from.set(getObjectMapKey(neighbor), candidate);
     });
   }
 
@@ -80,8 +81,8 @@ export function search(
   let current_node = end;
   const path = [current_node];
 
-  while (getKey(current_node) !== getKey(start)) {
-    const prev = came_from.get(getKey(current_node));
+  while (getObjectMapKey(current_node) !== getObjectMapKey(start)) {
+    const prev = came_from.get(getObjectMapKey(current_node));
     if (!prev) continue;
     path.push(prev);
     current_node = prev;
@@ -92,28 +93,28 @@ export function search(
   return path;
 }
 
-function getNeighbors(coords: Vector2, world: World, cost: CostMap) {
-  const neighbors: Vector2[] = [];
+function getNeighbors(coords: Vector3, world: World, cost: CostMap) {
+  const neighbors: Vector3[] = [];
 
   // Left
   if (coords.x > 0) {
-    neighbors.push(new Vector2(coords.x - 1, coords.y));
+    neighbors.push(new Vector3(coords.x - 1, 0, coords.z));
   }
   // Right
   if (coords.x < world.width - 1) {
-    neighbors.push(new Vector2(coords.x + 1, coords.y));
+    neighbors.push(new Vector3(coords.x + 1, 0, coords.z));
   }
   // Top
-  if (coords.y > 0) {
-    neighbors.push(new Vector2(coords.x, coords.y - 1));
+  if (coords.z > 0) {
+    neighbors.push(new Vector3(coords.x, 0, coords.z - 1));
   }
   // Bottom
-  if (coords.y < world.height - 1) {
-    neighbors.push(new Vector2(coords.x, coords.y + 1));
+  if (coords.z < world.height - 1) {
+    neighbors.push(new Vector3(coords.x, 0, coords.z + 1));
   }
 
   // Cost to get to neighbor square is the current square cost + 1
-  const new_cost = (cost.get(getKey(coords)) || 0) + 1;
+  const new_cost = (cost.get(getObjectMapKey(coords)) || 0) + 1;
 
   // Exclude any squares that are already visited, as well
   // as any squares that are occupied
@@ -121,9 +122,9 @@ function getNeighbors(coords: Vector2, world: World, cost: CostMap) {
     .filter((coords_item) => {
       // If neighboring square has not yet been visited, or this
       // is a cheaper path cost, then include it in the search
-      const coords_cost = cost.get(getKey(coords_item));
+      const coords_cost = cost.get(getObjectMapKey(coords_item));
       if (!coords_cost || new_cost < coords_cost) {
-        cost.set(getKey(coords_item), new_cost);
+        cost.set(getObjectMapKey(coords_item), new_cost);
         return true;
       }
 

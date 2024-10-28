@@ -1,12 +1,10 @@
 import {
-  ConeGeometry,
   Group,
   Mesh,
   MeshStandardMaterial,
   PlaneGeometry,
   RepeatWrapping,
   SRGBColorSpace,
-  SphereGeometry,
   TextureLoader,
   Vector2,
   Vector3,
@@ -15,6 +13,7 @@ import { Bush } from "./objects/Bush";
 import { GameObject } from "./objects/GameObject";
 import { Rock } from "./objects/Rock";
 import { Tree } from "./objects/Tree";
+import { getObjectMapKey } from "./utils";
 
 const texture_loader = new TextureLoader();
 const grid_texture = texture_loader.load("../public/textures/grid.png");
@@ -25,13 +24,6 @@ export class World extends Group {
   #object_map = new Map();
 
   path: Group;
-
-  /**
-   * Returns the key for the object map given a set of coordinates
-   */
-  getObjectMapKey(coords: Vector3) {
-    return `${coords.x}-${coords.y}-${coords.z}`;
-  }
 
   private _width: number;
   private _height: number;
@@ -182,9 +174,9 @@ export class World extends Group {
    * an object already exists at those coordinates
    */
   addObject(object: GameObject, coords: Vector3, group: Group) {
-    if (this.#object_map.has(this.getObjectMapKey(coords))) return false;
+    if (this.#object_map.has(getObjectMapKey(coords))) return false;
     group.add(object);
-    this.#object_map.set(this.getObjectMapKey(coords), object);
+    this.#object_map.set(getObjectMapKey(coords), object);
     return true;
   }
 
@@ -192,6 +184,6 @@ export class World extends Group {
    * Returns the object at `coords` if one exists, otherwise returns null
    */
   getObject(coords: Vector3): Mesh | null {
-    return this.#object_map.get(this.getObjectMapKey(coords)) ?? null;
+    return this.#object_map.get(getObjectMapKey(coords)) ?? null;
   }
 }

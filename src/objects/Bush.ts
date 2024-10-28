@@ -13,7 +13,7 @@ export class Bush extends GameObject {
 
   constructor(coords: Vector3) {
     super(coords, BUSH_GEOMETRY, BUSH_MATERIAL);
-    this.name = `Bush-(${coords.x},${coords.y})`;
+    this.name = `Bush-(${coords.x},${coords.z})`;
     const radius =
       this.min_bush_radius +
       Math.random() * (this.max_bush_radius - this.min_bush_radius);
