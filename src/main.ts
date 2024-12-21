@@ -3,7 +3,7 @@ import { OrbitControls } from "three/addons/controls/OrbitControls.js";
 import Stats from "three/addons/libs/stats.module.js";
 import { GUI } from "three/addons/libs/lil-gui.module.min.js";
 import { World } from "./world";
-import { Player } from "./player";
+import { HumanPlayer } from "./players/HumanPlayer";
 
 const gui = new GUI();
 const stats = new Stats();
@@ -28,7 +28,7 @@ camera.position.set(0, 2, 0);
 const world = new World(10, 10);
 scene.add(world);
 
-const player = new Player(new THREE.Vector3(1, 0, 5), camera, world);
+const player = new HumanPlayer(new THREE.Vector3(1, 0, 5), camera, world);
 scene.add(player);
 
 const sun = new THREE.DirectionalLight();
@@ -63,3 +63,9 @@ world_folder.add(world, "tree_count", 1, 100, 1).name("Tree Count");
 world_folder.add(world, "rock_count", 1, 100, 1).name("Rock Count");
 world_folder.add(world, "bush_count", 1, 100, 1).name("Bush Count");
 world_folder.add(world, "generate").name("Generate");
+
+const action = await player.requestAction();
+const can = await action?.canPerform();
+if (can) {
+  await action?.perform();
+}

@@ -7,4 +7,13 @@ export class GameObject extends Mesh {
     super(geometry, material);
     this.coords = coords;
   }
+
+  moveTo(coords: Vector3) {
+    this.coords = coords;
+    this.position.set(
+      this.coords.x + 0.5,
+      this.coords.y + 0.5,
+      this.coords.z + 0.5
+    );
+  }
 }

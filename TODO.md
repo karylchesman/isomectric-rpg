@@ -21,14 +21,10 @@
   - [x] GameObject
     - [x] Player (Human/Computer Player)
     - [x] Trees / Rocks / Bushes
-  - [ ] Implementing the base Action class
-    - [ ] MovementAction
-  - [ ] Asynchronous Input
-    - [ ] Selecting a target square
-    - [ ] Selecting a target object
-  - [ ] Add some UI
-    - [ ] List out actions for the active player
-    - [ ] Status bar
+  - [x] Implementing the base Action class
+    - [x] MovementAction
+  - [x] Asynchronous Input
+    - [x] Selecting a target square
   - [ ] Combat Manager
     - [ ] Iterate through all the players
     - [ ] Request an action from each player
@@ -36,3 +32,8 @@
   - [ ] Draw enemies on screen (static)
   - [ ] Patrol
 - [ ] Combat
+  - [ ] Asynchronous Input
+    - [ ] Selecting a target object
+- [ ] Add some UI
+  - [ ] List out actions for the active player
+  - [ ] Status bar
