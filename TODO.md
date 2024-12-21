@@ -25,15 +25,21 @@
     - [x] MovementAction
   - [x] Asynchronous Input
     - [x] Selecting a target square
-  - [ ] Combat Manager
-    - [ ] Iterate through all the players
-    - [ ] Request an action from each player
-- [ ] Enemies
-  - [ ] Draw enemies on screen (static)
-  - [ ] Patrol
+  - [x] Combat Manager
+    - [x] Iterate through all the players
+    - [x] Request an action from each player
 - [ ] Combat
+  - [ ] Action
+    - [ ] MeleeAttackAction
+    - [ ] RangedAttackAction
+  - [ ] Enemies
+    - [ ] Hit points
+    - [ ] Remove the enemies when they are killed
+  - [ ] Path finding
+    - [ ] Don't allow players to move through other players
   - [ ] Asynchronous Input
     - [ ] Selecting a target object
-- [ ] Add some UI
-  - [ ] List out actions for the active player
-  - [ ] Status bar
+  - [ ] Add some UI
+    - [ ] List out actions for the active player
+    - [ ] Status bar
+- [ ] Enemy AI

@@ -4,6 +4,7 @@ import Stats from "three/addons/libs/stats.module.js";
 import { GUI } from "three/addons/libs/lil-gui.module.min.js";
 import { World } from "./world";
 import { HumanPlayer } from "./players/HumanPlayer";
+import { CombatManager } from "./CombatManager";
 
 const gui = new GUI();
 const stats = new Stats();
@@ -28,8 +29,14 @@ camera.position.set(0, 2, 0);
 const world = new World(10, 10);
 scene.add(world);
 
-const player = new HumanPlayer(new THREE.Vector3(1, 0, 5), camera, world);
-scene.add(player);
+const player1 = new HumanPlayer(new THREE.Vector3(1, 0, 5), camera, world);
+scene.add(player1);
+const player2 = new HumanPlayer(new THREE.Vector3(8, 0, 3), camera, world);
+scene.add(player2);
+
+const combat_manager = new CombatManager();
+combat_manager.addPlayer(player1);
+combat_manager.addPlayer(player2);
 
 const sun = new THREE.DirectionalLight();
 sun.intensity = 3;
@@ -64,8 +71,4 @@ world_folder.add(world, "rock_count", 1, 100, 1).name("Rock Count");
 world_folder.add(world, "bush_count", 1, 100, 1).name("Bush Count");
 world_folder.add(world, "generate").name("Generate");
 
-const action = await player.requestAction();
-const can = await action?.canPerform();
-if (can) {
-  await action?.perform();
-}
+combat_manager.takeTurns();

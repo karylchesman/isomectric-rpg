@@ -19,19 +19,36 @@ export class MovementAction extends Action<Player> {
   }
 
   override async perform(): Promise<void> {
-    // Clear the existing path update interval
-    clearInterval(this._path_updater ?? undefined);
+    return new Promise((resolve) => {
+      const updateSourcePosition = () => {
+        // If we reached thee end of the path, then stop
+        // the movement update interval, clear the path
+        // breadcrumbs and resolve this action to unblock
+        // the combat manager
+        if (this._path_index === this._path?.length) {
+          clearInterval(this._path_updater ?? undefined);
+          this._world.path.clear();
+          resolve();
+          return;
+        }
+        // Otherwise, move source object to the next path node
+        const current_square = this._path[this._path_index++];
+        this.source.moveTo(current_square);
+      };
+      // Clear the existing path update interval
+      clearInterval(this._path_updater ?? undefined);
 
-    // Add the breadcrumbs to the world
-    this._path.forEach((coords) => {
-      const node = breadcrumb.clone();
-      node.position.set(coords.x + 0.5, 0, coords.z + 0.5);
-      this._world.path.add(node);
+      // Add the breadcrumbs to the world
+      this._path.forEach((coords) => {
+        const node = breadcrumb.clone();
+        node.position.set(coords.x + 0.5, 0, coords.z + 0.5);
+        this._world.path.add(node);
+      });
+
+      // Trigger interval function to update player's position
+      this._path_index = 0;
+      this._path_updater = setInterval(updateSourcePosition.bind(this), 300);
     });
-
-    // Trigger interval function to update player's position
-    this._path_index = 0;
-    this._path_updater = setInterval(this.updatePosition.bind(this), 300);
   }
 
   override async canPerform(): Promise<boolean> {
@@ -42,16 +59,5 @@ export class MovementAction extends Action<Player> {
     this._path = search(this.source.coords, selected_coords, this._world) ?? [];
     // If no path found, return early
     return !!this._path.length;
-  }
-
-  updatePosition() {
-    if (this._path_index === this._path?.length) {
-      clearInterval(this._path_updater ?? undefined);
-      this._world.path.clear();
-      return;
-    }
-
-    const current_square = this._path[this._path_index++];
-    this.source.moveTo(current_square);
   }
 }
