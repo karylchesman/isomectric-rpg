@@ -1,7 +1,6 @@
 import { Raycaster, Vector2, Vector3 } from "three";
-import { Action } from "../actions/Action";
+import { Action } from "../actions";
 import { Player } from "./Player";
-import { MovementAction } from "../actions/MovementAction";
 
 export class HumanPlayer extends Player {
   override name: string = "HumanPlayer";
@@ -42,9 +41,26 @@ export class HumanPlayer extends Player {
   }
 
   override async requestAction(): Promise<Action | null> {
-    console.log(`Requesting action...`);
-    const selected_action = new MovementAction(this, this._world);
-    console.log(`Player ${this.name} selected action ${selected_action.name}`);
-    return selected_action;
+    const status_text = document.getElementById("status-text");
+    const actions_container = document.getElementById("actions");
+    if (!status_text || !actions_container) return null;
+
+    actions_container.innerHTML = "";
+
+    const actions = this.getActions();
+
+    status_text.innerText = `Waiting for ${this.name} to select an action`;
+
+    return new Promise((resolve) => {
+      actions.forEach((action) => {
+        const button = document.createElement("button");
+        button.innerText = action.name;
+        button.onclick = () => {
+          console.log("Selected action", action.name);
+          resolve(action);
+        };
+        actions_container.append(button);
+      });
+    });
   }
 }

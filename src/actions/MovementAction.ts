@@ -7,7 +7,7 @@ import { World } from "../world";
 const breadcrumb = new Mesh(new SphereGeometry(0.1), new MeshBasicMaterial());
 
 export class MovementAction extends Action<Player> {
-  override name: string = "MovementAction";
+  override name: string = "Move";
   private _path: Vector3[] = [];
   private _path_index = 0;
   private _path_updater: number | null = null;

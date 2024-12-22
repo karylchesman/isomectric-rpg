@@ -30,8 +30,10 @@ const world = new World(10, 10);
 scene.add(world);
 
 const player1 = new HumanPlayer(new THREE.Vector3(1, 0, 5), camera, world);
+player1.name = "Player 1";
 scene.add(player1);
 const player2 = new HumanPlayer(new THREE.Vector3(8, 0, 3), camera, world);
+player2.name = "Player 2";
 scene.add(player2);
 
 const combat_manager = new CombatManager();

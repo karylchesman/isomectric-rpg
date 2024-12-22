@@ -32,6 +32,7 @@
   - [ ] Action
     - [ ] MeleeAttackAction
     - [ ] RangedAttackAction
+    - [x] WaitAction
   - [ ] Enemies
     - [ ] Hit points
     - [ ] Remove the enemies when they are killed
@@ -40,6 +41,7 @@
   - [ ] Asynchronous Input
     - [ ] Selecting a target object
   - [ ] Add some UI
-    - [ ] List out actions for the active player
-    - [ ] Status bar
+    - [x] List out actions for the active player
+    - [x] Status bar
+    - [ ] Display player/object git points above their head
 - [ ] Enemy AI
