@@ -1,4 +1,5 @@
 import {
+  BoxGeometry,
   Group,
   Mesh,
   MeshStandardMaterial,
@@ -120,16 +121,10 @@ export class World extends Group {
     grid_texture.colorSpace = SRGBColorSpace;
 
     const terrain_material = new MeshStandardMaterial({ map: grid_texture });
-    const terrain_geometry = new PlaneGeometry(
-      this._width,
-      this._height,
-      this._width,
-      this._height
-    );
+    const terrain_geometry = new BoxGeometry(this.width, 0.1, this.height);
     this._terrain = new Mesh(terrain_geometry, terrain_material);
     this._terrain.name = "Terrain";
-    this._terrain.rotation.x = -Math.PI / 2;
-    this._terrain.position.set(this._width / 2, 0, this._height / 2);
+    this._terrain.position.set(this._width / 2, -0.05, this._height / 2);
     this.add(this._terrain);
   }
 
