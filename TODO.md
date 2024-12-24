@@ -34,14 +34,14 @@
     - [ ] RangedAttackAction
     - [x] WaitAction
   - [ ] Enemies
-    - [ ] Hit points
+    - [x] Hit points
     - [ ] Remove the enemies when they are killed
   - [ ] Path finding
     - [ ] Don't allow players to move through other players
   - [ ] Asynchronous Input
     - [ ] Selecting a target object
-  - [ ] Add some UI
+  - [x] Add some UI
     - [x] List out actions for the active player
     - [x] Status bar
-    - [ ] Display player/object git points above their head
+    - [x] Display player/object git points above their head
 - [ ] Enemy AI

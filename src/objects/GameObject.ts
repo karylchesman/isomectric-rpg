@@ -1,18 +1,24 @@
-import { BufferGeometry, Material, Mesh, Sprite, Vector3 } from "three";
+import { Group, Mesh, Sprite, Vector3 } from "three";
 import { createTextMaterial } from "../utils";
 
-export class GameObject extends Mesh {
+export class GameObject extends Group {
+  mesh: Mesh;
   coords: Vector3;
   private _hit_points: number = 10;
   private _max_hit_points: number = 10;
   private _health_overlay: Sprite;
 
-  constructor(coords: Vector3, geometry: BufferGeometry, material: Material) {
-    super(geometry, material);
+  constructor(coords: Vector3, mesh: Mesh) {
+    super();
+
     this.coords = coords;
+    this.position.copy(coords);
+
+    this.mesh = mesh;
+    this.add(mesh);
 
     this._health_overlay = new Sprite();
-    this._health_overlay.position.y = 0.75;
+    this._health_overlay.position.set(0.5, 1.2, 0.5);
     this.add(this._health_overlay);
 
     this.updateHitPointOverlay();
@@ -38,11 +44,7 @@ export class GameObject extends Mesh {
 
   moveTo(coords: Vector3) {
     this.coords = coords;
-    this.position.set(
-      this.coords.x + 0.5,
-      this.coords.y + 0.5,
-      this.coords.z + 0.5
-    );
+    this.position.copy(coords);
   }
 
   updateHitPointOverlay() {

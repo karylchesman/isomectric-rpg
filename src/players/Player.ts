@@ -1,4 +1,10 @@
-import { Camera, CapsuleGeometry, MeshStandardMaterial, Vector3 } from "three";
+import {
+  Camera,
+  CapsuleGeometry,
+  Mesh,
+  MeshStandardMaterial,
+  Vector3,
+} from "three";
 import { World } from "../world";
 import { GameObject } from "../objects/GameObject";
 import type { Action } from "../actions/Action";
@@ -17,8 +23,12 @@ export class Player extends GameObject {
   constructor(coords: Vector3, camera: Camera, world: World) {
     // The player's material is created of each instance because if they
     // share the same material, when we change the color of one, all other ones will as well
-    const material = new MeshStandardMaterial({ color: 0x4040c0 });
-    super(coords, PLAYER_GEOMETRY, material);
+    const player_mesh = new Mesh(
+      PLAYER_GEOMETRY,
+      new MeshStandardMaterial({ color: 0x4040c0 })
+    );
+    player_mesh.position.set(0.5, 0.5, 0.5);
+    super(coords, player_mesh);
     this.moveTo(coords);
     this._camera = camera;
     this._world = world;

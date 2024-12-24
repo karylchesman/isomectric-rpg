@@ -1,4 +1,4 @@
-import { MeshStandardMaterial, SphereGeometry, Vector3 } from "three";
+import { Mesh, MeshStandardMaterial, SphereGeometry, Vector3 } from "three";
 import { GameObject } from "./GameObject";
 
 const BUSH_MATERIAL = new MeshStandardMaterial({
@@ -8,16 +8,18 @@ const BUSH_MATERIAL = new MeshStandardMaterial({
 const BUSH_GEOMETRY = new SphereGeometry(1, 8, 8);
 
 export class Bush extends GameObject {
-  min_bush_radius = 0.1;
-  max_bush_radius = 0.3;
-
   constructor(coords: Vector3) {
-    super(coords, BUSH_GEOMETRY, BUSH_MATERIAL);
-    this.name = `Bush-(${coords.x},${coords.z})`;
+    const min_bush_radius = 0.1;
+    const max_bush_radius = 0.3;
     const radius =
-      this.min_bush_radius +
-      Math.random() * (this.max_bush_radius - this.min_bush_radius);
-    this.scale.set(radius, radius, radius);
-    this.position.set(coords.x + 0.5, coords.y + radius, coords.z + 0.5);
+      min_bush_radius + Math.random() * (max_bush_radius - min_bush_radius);
+
+    const bush_mesh = new Mesh(BUSH_GEOMETRY, BUSH_MATERIAL);
+    bush_mesh.scale.set(radius, radius, radius);
+    bush_mesh.position.set(0.5, radius, 0.5);
+
+    super(coords, bush_mesh);
+
+    this.name = `Bush-(${coords.x},${coords.z})`;
   }
 }

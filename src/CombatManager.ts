@@ -1,4 +1,4 @@
-import { Color, Material, MeshStandardMaterial } from "three";
+import { Color, MeshStandardMaterial } from "three";
 import { Player } from "./players/Player";
 
 export class CombatManager {
@@ -23,8 +23,8 @@ export class CombatManager {
         let action_performed = false;
         // This was added because typescript cannot ensure the type of material applied to the object
         // in order to access the property `color`
-        if (player.material instanceof MeshStandardMaterial) {
-          player.material.color = new Color(0xffff00);
+        if (player.mesh.material instanceof MeshStandardMaterial) {
+          player.mesh.material.color = new Color(0xffff00);
         }
         do {
           const action = await player.requestAction();
@@ -36,8 +36,8 @@ export class CombatManager {
             alert("Cannot perform action, pick another action");
           }
         } while (!action_performed);
-        if (player.material instanceof MeshStandardMaterial) {
-          player.material.color = new Color(0x4040c0);
+        if (player.mesh.material instanceof MeshStandardMaterial) {
+          player.mesh.material.color = new Color(0x4040c0);
         }
       }
     }

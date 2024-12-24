@@ -1,4 +1,4 @@
-import { MeshStandardMaterial, SphereGeometry, Vector3 } from "three";
+import { Mesh, MeshStandardMaterial, SphereGeometry, Vector3 } from "three";
 import { GameObject } from "./GameObject";
 
 const ROCK_GEOMETRY = new SphereGeometry(1, 6, 5);
@@ -9,22 +9,21 @@ const ROCK_MATERIAL = new MeshStandardMaterial({
 });
 
 export class Rock extends GameObject {
-  min_radius = 0.2;
-  max_radius = 0.4;
-  min_height = 0.1;
-  max_height = 0.3;
-
   constructor(coords: Vector3) {
-    super(coords, ROCK_GEOMETRY, ROCK_MATERIAL);
+    const min_radius = 0.2;
+    const max_radius = 0.4;
+    const min_height = 0.1;
+    const max_height = 0.3;
+
+    const radius = min_radius + Math.random() * (max_radius - min_radius);
+    const height = min_height + Math.random() * (max_height - min_height);
+
+    const rock_mesh = new Mesh(ROCK_GEOMETRY, ROCK_MATERIAL);
+    rock_mesh.scale.set(radius, height, radius);
+    rock_mesh.position.set(0.5, height / 4, 0.5);
+
+    super(coords, rock_mesh);
 
     this.name = `Rock-(${coords.x},${coords.z})`;
-
-    const radius =
-      this.min_radius + Math.random() * (this.max_radius - this.min_radius);
-    const height =
-      this.min_height + Math.random() * (this.max_height - this.min_height);
-
-    this.scale.set(radius, height, radius);
-    this.position.set(coords.x + 0.5, coords.y + height / 4, coords.z + 0.5);
   }
 }
