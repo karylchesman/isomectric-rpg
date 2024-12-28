@@ -6,7 +6,7 @@ export class GameObject extends Group {
   coords: Vector3;
   private _hit_points: number = 10;
   private _max_hit_points: number = 10;
-  private _health_overlay: Sprite;
+  protected _health_overlay: Sprite;
 
   constructor(coords: Vector3, mesh: Mesh) {
     super();
@@ -19,6 +19,7 @@ export class GameObject extends Group {
 
     this._health_overlay = new Sprite();
     this._health_overlay.position.set(0.5, 1.2, 0.5);
+    this._health_overlay.visible = false;
     this.add(this._health_overlay);
 
     this.updateHitPointOverlay();

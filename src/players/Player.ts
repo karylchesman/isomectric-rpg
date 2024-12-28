@@ -29,6 +29,7 @@ export class Player extends GameObject {
     );
     player_mesh.position.set(0.5, 0.5, 0.5);
     super(coords, player_mesh);
+    this._health_overlay.visible = true;
     this.moveTo(coords);
     this._camera = camera;
     this._world = world;
