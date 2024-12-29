@@ -1,11 +1,17 @@
-import { Raycaster, Vector2, Vector3 } from "three";
+import { Camera, Raycaster, Vector2, Vector3 } from "three";
 import { Action } from "../actions";
 import { Player } from "./Player";
 import { GameObject } from "../objects/GameObject";
+import { World } from "../world";
 
 export class HumanPlayer extends Player {
   override name: string = "HumanPlayer";
   private _ray_caster = new Raycaster();
+
+  constructor(coords: Vector3, camera: Camera, world: World) {
+    super(coords, camera, world);
+    this._ray_caster.layers.disable(1);
+  }
 
   override async getTargetSquare(): Promise<Vector3 | null> {
     return new Promise((resolve) => {

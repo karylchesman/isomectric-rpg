@@ -24,6 +24,7 @@ const camera = new THREE.PerspectiveCamera(
   1000
 );
 camera.position.set(0, 2, 0);
+camera.layers.enable(1);
 
 const world = new World(10, 10, camera);
 scene.add(world);

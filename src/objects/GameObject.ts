@@ -29,6 +29,7 @@ export class GameObject extends Group {
     this._health_overlay = new Sprite();
     this._health_overlay.position.set(0.5, 1.2, 0.5);
     this._health_overlay.visible = false;
+    this._health_overlay.layers.set(1);
     this.add(this._health_overlay);
 
     this.updateHitPointOverlay();
