@@ -21,6 +21,7 @@ export class CombatManager {
   async takeTurns(world: World) {
     while (true) {
       for (const player of world.players.children as Player[]) {
+        if (player.is_dead) continue;
         let action_performed = false;
         // This was added because typescript cannot ensure the type of material applied to the object
         // in order to access the property `color`

@@ -200,10 +200,14 @@ export class World extends Group {
     }
 
     object.onMove = (object, old_coords, new_coords) => {
-      console.log("onMove", object, old_coords, new_coords);
       this.#object_map.delete(getObjectMapKey(old_coords));
       this.#object_map.set(getObjectMapKey(new_coords), object);
     };
+    object.onDestroy = (object) => {
+      this.#object_map.delete(getObjectMapKey(object.coords));
+      object.removeFromParent();
+    };
+
     this.#object_map.set(getObjectMapKey(object.coords), object);
     return true;
   }

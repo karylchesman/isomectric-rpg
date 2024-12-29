@@ -12,6 +12,11 @@ export class GameObject extends Group {
     | ((object: GameObject, old_coords: Vector3, new_coords: Vector3) => void)
     | null = null;
 
+  /**
+   * Callback triggered when the object's hit points go to zero
+   */
+  onDestroy: ((object: GameObject) => void) | null = null;
+
   constructor(coords: Vector3, mesh: Mesh) {
     super();
 
@@ -39,11 +44,18 @@ export class GameObject extends Group {
     return this._hit_points === 0;
   }
 
+  destroy() {
+    this._health_overlay.material.dispose();
+    this.onDestroy?.(this);
+  }
+
   hit(damage: number) {
     this._hit_points -= damage;
-    if (this._hit_points < 0) {
+    if (this._hit_points <= 0) {
       this._hit_points = 0;
+      this.destroy();
     }
+
     this.updateHitPointOverlay();
   }
 
