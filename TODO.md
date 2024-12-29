@@ -36,8 +36,8 @@
   - [ ] Enemies
     - [x] Hit points
     - [ ] Remove the enemies when they are killed
-  - [ ] Path finding
-    - [ ] Don't allow players to move through other players
+  - [x] Path finding
+    - [x] Don't allow players to move through other players
   - [ ] Asynchronous Input
     - [ ] Selecting a target object
   - [x] Add some UI

@@ -27,15 +27,12 @@ export class HumanPlayer extends Player {
             Math.floor(intersections[0].point.z)
           );
           console.log("Selected coordinates", selected_coords);
-          window.removeEventListener("mousedown", onMouseDownBound);
+          window.removeEventListener("mousedown", onMouseDown);
           resolve(selected_coords);
         }
       };
 
-      // Need to assign the bound function to a variable so we can remove the event listener later
-      // bind() results in a different function reference each time it's called
-      const onMouseDownBound = onMouseDown.bind(this);
-      window.addEventListener("mousedown", onMouseDownBound);
+      window.addEventListener("mousedown", onMouseDown);
       console.log("Waiting for player to selected a target square");
     });
   }

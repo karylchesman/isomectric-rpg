@@ -8,6 +8,10 @@ export class GameObject extends Group {
   private _max_hit_points: number = 10;
   protected _health_overlay: Sprite;
 
+  onMove:
+    | ((object: GameObject, old_coords: Vector3, new_coords: Vector3) => void)
+    | null = null;
+
   constructor(coords: Vector3, mesh: Mesh) {
     super();
 
@@ -44,8 +48,11 @@ export class GameObject extends Group {
   }
 
   moveTo(coords: Vector3) {
+    const old_coordinates = this.coords;
     this.coords = coords;
     this.position.copy(coords);
+
+    this.onMove?.(this, old_coordinates, this.coords);
   }
 
   updateHitPointOverlay() {

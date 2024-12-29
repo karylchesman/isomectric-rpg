@@ -28,13 +28,14 @@ export class World extends Group {
 
   private _width: number;
   private _height: number;
-  private _terrain: TTerrain | undefined;
   private _tree_count: number;
-  private _trees: Group;
   private _rock_count: number;
-  private _rocks: Group;
   private _bush_count: number;
-  private _bushes: Group;
+
+  private _objects: Group;
+  private _props: Group;
+  private _players: Group;
+  private _terrain: TTerrain | undefined;
 
   constructor(width: number, height: number) {
     super();
@@ -44,12 +45,15 @@ export class World extends Group {
     this._tree_count = 10;
     this._rock_count = 20;
     this._bush_count = 10;
-    this._trees = new Group();
-    this.add(this._trees);
-    this._rocks = new Group();
-    this.add(this._rocks);
-    this._bushes = new Group();
-    this.add(this._bushes);
+
+    this._objects = new Group();
+    this.add(this._objects);
+
+    this._players = new Group();
+    this._objects.add(this._players);
+
+    this._props = new Group();
+    this._objects.add(this._props);
 
     this.path = new Group();
     this.add(this.path);
@@ -107,10 +111,8 @@ export class World extends Group {
       this.remove(this._terrain);
     }
 
-    this._trees.clear();
-    this._rocks.clear();
-    this._bushes.clear();
-
+    this._players.clear();
+    this._props.clear();
     this.#object_map.clear();
   }
 
@@ -136,7 +138,7 @@ export class World extends Group {
         Math.floor(this._height * Math.random())
       );
       const tree = new Tree(coords);
-      this.addObject(tree, coords, this._trees);
+      this.addObject(tree, "props");
     }
   }
 
@@ -148,7 +150,7 @@ export class World extends Group {
         Math.floor(this._height * Math.random())
       );
       const rock = new Rock(coords);
-      this.addObject(rock, coords, this._rocks);
+      this.addObject(rock, "props");
     }
   }
 
@@ -160,7 +162,7 @@ export class World extends Group {
         Math.floor(this._height * Math.random())
       );
       const bush = new Bush(coords);
-      this.addObject(bush, coords, this._bushes);
+      this.addObject(bush, "props");
     }
   }
 
@@ -168,10 +170,24 @@ export class World extends Group {
    * Adds an object to the world at the specified coordinates unless
    * an object already exists at those coordinates
    */
-  addObject(object: GameObject, coords: Vector3, group: Group) {
-    if (this.#object_map.has(getObjectMapKey(coords))) return false;
-    group.add(object);
-    this.#object_map.set(getObjectMapKey(coords), object);
+  addObject(object: GameObject, group: "players" | "props") {
+    if (this.#object_map.has(getObjectMapKey(object.coords))) return false;
+
+    switch (group) {
+      case "players":
+        this._players.add(object);
+        break;
+      case "props":
+        this._props.add(object);
+        break;
+    }
+
+    object.onMove = (object, old_coords, new_coords) => {
+      console.log("onMove", object, old_coords, new_coords);
+      this.#object_map.delete(getObjectMapKey(old_coords));
+      this.#object_map.set(getObjectMapKey(new_coords), object);
+    };
+    this.#object_map.set(getObjectMapKey(object.coords), object);
     return true;
   }
 
