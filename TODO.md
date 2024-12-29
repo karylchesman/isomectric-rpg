@@ -30,18 +30,18 @@
     - [x] Request an action from each player
 - [ ] Combat
   - [ ] Action
-    - [ ] MeleeAttackAction
+    - [x] MeleeAttackAction
     - [ ] RangedAttackAction
     - [x] WaitAction
   - [ ] Enemies
     - [x] Hit points
-    - [ ] Remove the enemies when they are killed
+    - [x] Remove the enemies when they are killed
   - [x] Path finding
     - [x] Don't allow players to move through other players
   - [x] Asynchronous Input
     - [x] Selecting a target object
   - [x] Add some UI
     - [x] List out actions for the active player
-    - [x] Status bar
+    - [ ] Status bar
     - [x] Display player/object git points above their head
 - [ ] Enemy AI
