@@ -8,7 +8,12 @@ import {
 import { World } from "../world";
 import { GameObject } from "../objects/GameObject";
 import type { Action } from "../actions/Action";
-import { MovementAction, WaitAction, MeleeAttackAction } from "../actions";
+import {
+  MovementAction,
+  WaitAction,
+  MeleeAttackAction,
+  RangedAttackAction,
+} from "../actions";
 
 const PLAYER_GEOMETRY = new CapsuleGeometry(0.25, 0.5);
 
@@ -39,6 +44,7 @@ export class Player extends GameObject {
     return [
       new MovementAction(this, this._world),
       new MeleeAttackAction(this),
+      new RangedAttackAction(this),
       new WaitAction(this),
     ];
   }
