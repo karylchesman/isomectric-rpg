@@ -38,8 +38,8 @@
     - [ ] Remove the enemies when they are killed
   - [x] Path finding
     - [x] Don't allow players to move through other players
-  - [ ] Asynchronous Input
-    - [ ] Selecting a target object
+  - [x] Asynchronous Input
+    - [x] Selecting a target object
   - [x] Add some UI
     - [x] List out actions for the active player
     - [x] Status bar

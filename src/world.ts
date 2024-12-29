@@ -95,6 +95,9 @@ export class World extends Group {
   set bush_count(value: number) {
     this._bush_count = value;
   }
+  get objects() {
+    return this._objects;
+  }
 
   generate() {
     this.clearWorld();
