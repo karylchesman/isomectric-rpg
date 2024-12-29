@@ -48,17 +48,20 @@ export class HumanPlayer extends Player {
         );
 
         this._ray_caster.setFromCamera(coords, this._camera);
-        const intersections = this._ray_caster.intersectObject<GameObject>(
+        const intersections = this._ray_caster.intersectObject(
           this._world.objects,
           // This parameter makes the method search through whole object hierarchy
           true
         );
 
         if (intersections.length > 0) {
-          const selected_object = intersections[0].object;
-          console.log("Selected coordinates", selected_object);
+          // Intersection is occurring with the mesh
+          // The parent of the mesh is the GameObject
+          const selected_object = intersections[0].object.parent;
+          console.log("Selected target", selected_object);
+          if (!selected_object) return resolve(null);
           window.removeEventListener("mousedown", onMouseDown);
-          resolve(selected_object);
+          resolve(selected_object as GameObject);
         }
       };
 

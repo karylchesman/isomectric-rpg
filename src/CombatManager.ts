@@ -1,5 +1,6 @@
 import { Color, MeshStandardMaterial } from "three";
 import { Player } from "./players/Player";
+import { World } from "./world";
 
 export class CombatManager {
   players: Player[] = [];
@@ -17,9 +18,9 @@ export class CombatManager {
   /**
    * Main combat loop
    */
-  async takeTurns() {
+  async takeTurns(world: World) {
     while (true) {
-      for (const player of this.players) {
+      for (const player of world.players.children as Player[]) {
         let action_performed = false;
         // This was added because typescript cannot ensure the type of material applied to the object
         // in order to access the property `color`

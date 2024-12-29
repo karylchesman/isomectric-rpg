@@ -3,6 +3,7 @@ import {
   Group,
   Mesh,
   MeshStandardMaterial,
+  PerspectiveCamera,
   PlaneGeometry,
   RepeatWrapping,
   SRGBColorSpace,
@@ -15,6 +16,7 @@ import { GameObject } from "./objects/GameObject";
 import { Rock } from "./objects/Rock";
 import { Tree } from "./objects/Tree";
 import { getObjectMapKey } from "./utils";
+import { HumanPlayer } from "./players/HumanPlayer";
 
 const texture_loader = new TextureLoader();
 const grid_texture = texture_loader.load("../public/textures/grid.png");
@@ -37,7 +39,7 @@ export class World extends Group {
   private _players: Group;
   private _terrain: TTerrain | undefined;
 
-  constructor(width: number, height: number) {
+  constructor(width: number, height: number, camera: PerspectiveCamera) {
     super();
 
     this._width = width;
@@ -58,7 +60,7 @@ export class World extends Group {
     this.path = new Group();
     this.add(this.path);
 
-    this.generate();
+    this.generate(camera);
   }
 
   get width() {
@@ -95,12 +97,24 @@ export class World extends Group {
   set bush_count(value: number) {
     this._bush_count = value;
   }
+  get players() {
+    return this._players;
+  }
   get objects() {
     return this._objects;
   }
 
-  generate() {
+  generate(camera: PerspectiveCamera) {
     this.clearWorld();
+
+    const player1 = new HumanPlayer(new Vector3(1, 0, 5), camera, this);
+    player1.name = "Player 1";
+    this.addObject(player1, "players");
+
+    const player2 = new HumanPlayer(new Vector3(8, 0, 3), camera, this);
+    player2.name = "Player 2";
+    this.addObject(player2, "players");
+
     this.createTerrain();
     this.createTrees();
     this.createRocks();

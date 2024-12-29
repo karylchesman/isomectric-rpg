@@ -1,10 +1,9 @@
 import * as THREE from "three";
 import { OrbitControls } from "three/addons/controls/OrbitControls.js";
-import Stats from "three/addons/libs/stats.module.js";
 import { GUI } from "three/addons/libs/lil-gui.module.min.js";
-import { World } from "./world";
-import { HumanPlayer } from "./players/HumanPlayer";
+import Stats from "three/addons/libs/stats.module.js";
 import { CombatManager } from "./CombatManager";
+import { World } from "./world";
 
 const gui = new GUI();
 const stats = new Stats();
@@ -26,20 +25,10 @@ const camera = new THREE.PerspectiveCamera(
 );
 camera.position.set(0, 2, 0);
 
-const world = new World(10, 10);
+const world = new World(10, 10, camera);
 scene.add(world);
 
-const player1 = new HumanPlayer(new THREE.Vector3(1, 0, 5), camera, world);
-player1.name = "Player 1";
-world.addObject(player1, "players");
-
-const player2 = new HumanPlayer(new THREE.Vector3(8, 0, 3), camera, world);
-player2.name = "Player 2";
-world.addObject(player2, "players");
-
 const combat_manager = new CombatManager();
-combat_manager.addPlayer(player1);
-combat_manager.addPlayer(player2);
 
 const sun = new THREE.DirectionalLight();
 sun.intensity = 3;
@@ -72,6 +61,6 @@ world_folder.add(world, "height", 1, 20, 1).name("Height");
 world_folder.add(world, "tree_count", 1, 100, 1).name("Tree Count");
 world_folder.add(world, "rock_count", 1, 100, 1).name("Rock Count");
 world_folder.add(world, "bush_count", 1, 100, 1).name("Bush Count");
+// @ts-expect-error
 world_folder.add(world, "generate").name("Generate");
-
-combat_manager.takeTurns();
+combat_manager.takeTurns(world);
