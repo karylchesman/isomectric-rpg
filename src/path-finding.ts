@@ -90,7 +90,6 @@ export function search(
 
   path.reverse();
   path.shift();
-  console.log(path);
   return path;
 }
 

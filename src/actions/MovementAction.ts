@@ -1,14 +1,15 @@
 import { Mesh, MeshBasicMaterial, SphereGeometry, Vector3 } from "three";
 import { Player } from "../players/Player";
-import { Action } from "./Action";
+import { Action, TCanPerformResult } from "./Action";
 import { search } from "../path-finding";
 import { World } from "../world";
+import { updateStatus } from "../utils";
 
 const breadcrumb = new Mesh(new SphereGeometry(0.1), new MeshBasicMaterial());
 
 export class MovementAction extends Action<Player> {
   override name: string = "Move";
-  private _path: Vector3[] = [];
+  private _path: Vector3[] | null = null;
   private _path_index = 0;
   private _path_updater: number | null = null;
   private _world: World;
@@ -25,7 +26,7 @@ export class MovementAction extends Action<Player> {
         // the movement update interval, clear the path
         // breadcrumbs and resolve this action to unblock
         // the combat manager
-        if (this._path_index === this._path?.length) {
+        if (this._path_index === this._path?.length || !this._path) {
           clearInterval(this._path_updater ?? undefined);
           this._world.path.clear();
           resolve();
@@ -37,9 +38,9 @@ export class MovementAction extends Action<Player> {
       };
       // Clear the existing path update interval
       clearInterval(this._path_updater ?? undefined);
-
+      updateStatus("Moving...");
       // Add the breadcrumbs to the world
-      this._path.forEach((coords) => {
+      this._path?.forEach((coords) => {
         const node = breadcrumb.clone();
         node.position.set(coords.x + 0.5, 0, coords.z + 0.5);
         this._world.path.add(node);
@@ -51,13 +52,30 @@ export class MovementAction extends Action<Player> {
     });
   }
 
-  override async canPerform(): Promise<boolean> {
+  override async canPerform(): Promise<TCanPerformResult> {
     const selected_coords = await this.source.getTargetSquare();
-    console.log("canPerform", selected_coords);
-    if (!selected_coords) return false;
+    if (!selected_coords)
+      return {
+        value: false,
+        reason: "",
+      };
     // Find path from player's current position to the selected square
-    this._path = search(this.source.coords, selected_coords, this._world) ?? [];
-    // If no path found, return early
-    return !!this._path.length;
+    this._path = search(this.source.coords, selected_coords, this._world);
+
+    if (!this._path)
+      return {
+        value: false,
+        reason: "Could not find path to target square",
+      };
+
+    if (this._path.length <= 0)
+      return {
+        value: false,
+        reason: "Pick square other than starting square",
+      };
+
+    return {
+      value: true,
+    };
   }
 }

@@ -33,3 +33,9 @@ export function createTextMaterial(text: string): SpriteMaterial {
     map: new CanvasTexture(canvas),
   });
 }
+
+export function updateStatus(text: string) {
+  const el = document.getElementById("status-text");
+  if (!el) return;
+  el.innerText = text;
+}

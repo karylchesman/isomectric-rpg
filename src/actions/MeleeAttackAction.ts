@@ -1,6 +1,6 @@
 import { GameObject } from "../objects/GameObject";
 import { Player } from "../players/Player";
-import { Action } from "./Action";
+import { Action, TCanPerformResult } from "./Action";
 
 export class MeleeAttackAction extends Action<Player> {
   override name = "Melee Attack";
@@ -10,15 +10,33 @@ export class MeleeAttackAction extends Action<Player> {
     this._target?.hit(3 + Math.floor(Math.random() * 5));
   }
 
-  override async canPerform(): Promise<boolean> {
+  override async canPerform(): Promise<TCanPerformResult> {
     this._target = await this.source.getTargetObject();
-    if (!this._target) return false;
-    if (this._target === this.source) return false;
+
+    if (!this._target)
+      return {
+        value: false,
+        reason: "Must have a valid target",
+      };
+
+    if (this._target === this.source)
+      return {
+        value: false,
+        reason: "Cannot target self",
+      };
+
     const distance = this._target.coords
       .clone()
       .sub(this.source.coords)
       .length();
-    if (distance > 1) return false;
-    return true;
+    if (distance > 1)
+      return {
+        value: false,
+        reason: "Target is too far away",
+      };
+
+    return {
+      value: true,
+    };
   }
 }

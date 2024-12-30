@@ -28,12 +28,12 @@
   - [x] Combat Manager
     - [x] Iterate through all the players
     - [x] Request an action from each player
-- [ ] Combat
-  - [ ] Action
+- [x] Combat
+  - [x] Action
     - [x] MeleeAttackAction
-    - [ ] RangedAttackAction
+    - [x] RangedAttackAction
     - [x] WaitAction
-  - [ ] Enemies
+  - [x] Enemies
     - [x] Hit points
     - [x] Remove the enemies when they are killed
   - [x] Path finding
@@ -42,6 +42,13 @@
     - [x] Selecting a target object
   - [x] Add some UI
     - [x] List out actions for the active player
-    - [ ] Status bar
+    - [x] Status bar
     - [x] Display player/object git points above their head
+- [ ] Graphics Overhaul
+  - [ ] 3D assets for the props
+  - [ ] 3D assets for the player models
+  - [ ] Skybox
+  - [ ] Improved terrain (perlin noise? hills? water?)
+  - [ ] Fog
+- [ ] Player animation
 - [ ] Enemy AI

@@ -1,6 +1,7 @@
 import { Color, MeshStandardMaterial } from "three";
 import { Player } from "./players/Player";
 import { World } from "./world";
+import { updateStatus } from "./utils";
 
 export class CombatManager {
   players: Player[] = [];
@@ -28,14 +29,18 @@ export class CombatManager {
         if (player.mesh.material instanceof MeshStandardMaterial) {
           player.mesh.material.color = new Color(0xffff00);
         }
+        updateStatus(`Waiting for ${player.name} to select an action`);
         do {
           const action = await player.requestAction();
-          if (await action?.canPerform()) {
+          if (!action) continue;
+
+          const result = await action.canPerform();
+          if (result.value === true) {
             // Wait for the player to finish performing their action
-            await action?.perform();
+            await action.perform();
             action_performed = true;
           } else {
-            alert("Cannot perform action, pick another action");
+            updateStatus(result.reason);
           }
         } while (!action_performed);
         if (player.mesh.material instanceof MeshStandardMaterial) {
