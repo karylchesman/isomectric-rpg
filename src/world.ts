@@ -3,7 +3,6 @@ import {
   Group,
   Mesh,
   MeshStandardMaterial,
-  PerspectiveCamera,
   PlaneGeometry,
   RepeatWrapping,
   SRGBColorSpace,
@@ -39,7 +38,7 @@ export class World extends Group {
   private _players: Group;
   private _terrain: TTerrain | undefined;
 
-  constructor(width: number, height: number, camera: PerspectiveCamera) {
+  constructor(width: number, height: number) {
     super();
 
     this._width = width;
@@ -60,7 +59,7 @@ export class World extends Group {
     this.path = new Group();
     this.add(this.path);
 
-    this.generate(camera);
+    this.generate();
   }
 
   get width() {
@@ -104,14 +103,14 @@ export class World extends Group {
     return this._objects;
   }
 
-  generate(camera: PerspectiveCamera) {
+  generate() {
     this.clearWorld();
 
-    const player1 = new HumanPlayer(new Vector3(1, 0, 5), camera, this);
+    const player1 = new HumanPlayer(new Vector3(1, 0, 5), this);
     player1.name = "Player 1";
     this.addObject(player1, "players");
 
-    const player2 = new HumanPlayer(new Vector3(8, 0, 3), camera, this);
+    const player2 = new HumanPlayer(new Vector3(8, 0, 3), this);
     player2.name = "Player 2";
     this.addObject(player2, "players");
 

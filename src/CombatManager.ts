@@ -4,18 +4,6 @@ import { World } from "./world";
 import { updateStatus } from "./utils";
 
 export class CombatManager {
-  players: Player[] = [];
-
-  constructor() {}
-
-  /**
-   * Get player's initiative and add them to the
-   * array of players
-   */
-  addPlayer(player: Player) {
-    this.players.push(player);
-  }
-
   /**
    * Main combat loop
    */

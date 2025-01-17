@@ -4,6 +4,7 @@ import { GUI } from "three/addons/libs/lil-gui.module.min.js";
 import Stats from "three/addons/libs/stats.module.js";
 import { CombatManager } from "./CombatManager";
 import { World } from "./world";
+import { inputManager } from "./InputManager";
 
 const gui = new GUI();
 const stats = new Stats();
@@ -26,9 +27,10 @@ const camera = new THREE.PerspectiveCamera(
 camera.position.set(0, 2, 0);
 camera.layers.enable(1);
 
-const world = new World(10, 10, camera);
+const world = new World(10, 10);
 scene.add(world);
 
+inputManager.initialize(world, camera);
 const combat_manager = new CombatManager();
 
 const sun = new THREE.DirectionalLight();
@@ -62,6 +64,6 @@ world_folder.add(world, "height", 1, 20, 1).name("Height");
 world_folder.add(world, "tree_count", 1, 100, 1).name("Tree Count");
 world_folder.add(world, "rock_count", 1, 100, 1).name("Rock Count");
 world_folder.add(world, "bush_count", 1, 100, 1).name("Bush Count");
-// @ts-expect-error
 world_folder.add(world, "generate").name("Generate");
+
 combat_manager.takeTurns(world);
