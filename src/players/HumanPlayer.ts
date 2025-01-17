@@ -1,18 +1,11 @@
-import { Raycaster, Vector3 } from "three";
+import { Vector3 } from "three";
 import { Action } from "../actions";
 import { inputManager } from "../InputManager";
 import { GameObject } from "../objects/GameObject";
-import { World } from "../world";
 import { Player } from "./Player";
 
 export class HumanPlayer extends Player {
   override name: string = "HumanPlayer";
-  private _ray_caster = new Raycaster();
-
-  constructor(coords: Vector3, world: World) {
-    super(coords, world);
-    this._ray_caster.layers.disable(1);
-  }
 
   override async getTargetSquare(): Promise<Vector3 | null> {
     return inputManager.getTargetSquare();

@@ -12,14 +12,12 @@ export class MovementAction extends Action<Player> {
   private _path: Vector3[] | null = null;
   private _path_index = 0;
   private _path_updater: number | null = null;
-  private _world: World;
 
-  constructor(source: Player, world: World) {
+  constructor(source: Player) {
     super(source);
-    this._world = world;
   }
 
-  override async perform(): Promise<void> {
+  override async perform(world: World): Promise<void> {
     return new Promise((resolve) => {
       const updateSourcePosition = () => {
         // If we reached thee end of the path, then stop
@@ -28,7 +26,7 @@ export class MovementAction extends Action<Player> {
         // the combat manager
         if (this._path_index === this._path?.length || !this._path) {
           clearInterval(this._path_updater ?? undefined);
-          this._world.path.clear();
+          world.path.clear();
           resolve();
           return;
         }
@@ -43,7 +41,7 @@ export class MovementAction extends Action<Player> {
       this._path?.forEach((coords) => {
         const node = breadcrumb.clone();
         node.position.set(coords.x + 0.5, 0, coords.z + 0.5);
-        this._world.path.add(node);
+        world.path.add(node);
       });
 
       // Trigger interval function to update player's position
@@ -52,7 +50,7 @@ export class MovementAction extends Action<Player> {
     });
   }
 
-  override async canPerform(): Promise<TCanPerformResult> {
+  override async canPerform(world: World): Promise<TCanPerformResult> {
     const selected_coords = await this.source.getTargetSquare();
     if (!selected_coords)
       return {
@@ -60,7 +58,7 @@ export class MovementAction extends Action<Player> {
         reason: "",
       };
     // Find path from player's current position to the selected square
-    this._path = search(this.source.coords, selected_coords, this._world);
+    this._path = search(this.source.coords, selected_coords, world);
 
     if (!this._path)
       return {

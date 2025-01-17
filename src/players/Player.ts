@@ -1,11 +1,4 @@
-import {
-  Camera,
-  CapsuleGeometry,
-  Mesh,
-  MeshStandardMaterial,
-  Vector3,
-} from "three";
-import { World } from "../world";
+import { CapsuleGeometry, Mesh, MeshStandardMaterial, Vector3 } from "three";
 import { GameObject } from "../objects/GameObject";
 import type { Action } from "../actions/Action";
 import {
@@ -22,9 +15,8 @@ const PLAYER_GEOMETRY = new CapsuleGeometry(0.25, 0.5);
  */
 export class Player extends GameObject {
   override name: string = "Player";
-  protected _world: World;
 
-  constructor(coords: Vector3, world: World) {
+  constructor(coords: Vector3) {
     // The player's material is created of each instance because if they
     // share the same material, when we change the color of one, all other ones will as well
     const player_mesh = new Mesh(
@@ -35,12 +27,11 @@ export class Player extends GameObject {
     super(coords, player_mesh);
     this._health_overlay.visible = true;
     this.moveTo(coords);
-    this._world = world;
   }
 
   getActions(): Action[] {
     return [
-      new MovementAction(this, this._world),
+      new MovementAction(this),
       new MeleeAttackAction(this),
       new RangedAttackAction(this),
       new WaitAction(this),

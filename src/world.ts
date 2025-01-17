@@ -106,11 +106,11 @@ export class World extends Group {
   generate() {
     this.clearWorld();
 
-    const player1 = new HumanPlayer(new Vector3(1, 0, 5), this);
+    const player1 = new HumanPlayer(new Vector3(1, 0, 5));
     player1.name = "Player 1";
     this.addObject(player1, "players");
 
-    const player2 = new HumanPlayer(new Vector3(8, 0, 3), this);
+    const player2 = new HumanPlayer(new Vector3(8, 0, 3));
     player2.name = "Player 2";
     this.addObject(player2, "players");
 

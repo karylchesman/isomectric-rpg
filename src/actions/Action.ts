@@ -1,4 +1,5 @@
 import { GameObject } from "../objects/GameObject";
+import { World } from "../world";
 
 export type TCanPerformResult =
   | {
@@ -23,14 +24,14 @@ export class Action<Source extends GameObject = GameObject> {
   /**
    * Performs the action
    */
-  async perform(): Promise<void> {
+  async perform(_world: World): Promise<void> {
     // Do nothing
   }
 
   /**
    * Returns true/false if the action can be performed
    */
-  async canPerform(): Promise<TCanPerformResult> {
+  async canPerform(_world: World): Promise<TCanPerformResult> {
     return {
       value: true,
     };
