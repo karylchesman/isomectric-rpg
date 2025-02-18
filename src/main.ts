@@ -11,12 +11,14 @@ const stats = new Stats();
 document.body.querySelector("#app")!.appendChild(stats.dom);
 
 const renderer = new THREE.WebGLRenderer();
+renderer.setClearColor(0x80b0ff);
 renderer.setSize(window.innerWidth, window.innerHeight);
 renderer.setAnimationLoop(animate);
 renderer.setPixelRatio(devicePixelRatio);
 document.body.querySelector("#app")!.appendChild(renderer.domElement);
 
 const scene = new THREE.Scene();
+scene.fog = new THREE.Fog(0x80b0ff, 10, 30);
 
 const camera = new THREE.PerspectiveCamera(
   75,
