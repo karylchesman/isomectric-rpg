@@ -16,9 +16,10 @@ import { Rock } from "./objects/Rock";
 import { Tree } from "./objects/Tree";
 import { getObjectMapKey } from "./utils";
 import { HumanPlayer } from "./players/HumanPlayer";
+import gridTexture from "./assets/textures/grid.png";
 
 const texture_loader = new TextureLoader();
-const grid_texture = texture_loader.load("../public/textures/grid.png");
+const grid_texture = texture_loader.load(gridTexture);
 
 export type TTerrain = Mesh<PlaneGeometry, MeshStandardMaterial>;
 
