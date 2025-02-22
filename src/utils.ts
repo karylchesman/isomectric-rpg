@@ -39,3 +39,11 @@ export function updateStatus(text: string) {
   if (!el) return;
   el.innerText = text;
 }
+
+/**
+ * Returns the path to the model given the model name
+ * @param model_name the name of the model without the extension
+ */
+export function getModelPath(model_name: string): string {
+  return new URL(`./assets/models/${model_name}.glb`, import.meta.url).href;
+}

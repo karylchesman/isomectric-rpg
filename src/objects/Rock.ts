@@ -1,13 +1,9 @@
-import { Mesh, MeshStandardMaterial, SphereGeometry, Vector3 } from "three";
-import { GameObject } from "./GameObject";
+import { Mesh, MeshStandardMaterial, Vector3 } from "three";
 import { GLTFLoader } from "three/examples/jsm/loaders/GLTFLoader";
-
-function getModelPath(model_name: string): string {
-  return new URL(`../assets/models/${model_name}.glb`, import.meta.url).href;
-}
+import { getModelPath } from "../utils";
+import { GameObject } from "./GameObject";
 
 const loader = new GLTFLoader();
-const ROCK_GEOMETRY = new SphereGeometry(1, 6, 5);
 
 const ROCK_MATERIAL = new MeshStandardMaterial({
   color: 0xb0b0b0,
