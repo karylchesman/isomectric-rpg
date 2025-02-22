@@ -1,6 +1,12 @@
 import { Mesh, MeshStandardMaterial, SphereGeometry, Vector3 } from "three";
 import { GameObject } from "./GameObject";
+import { GLTFLoader } from "three/examples/jsm/loaders/GLTFLoader";
 
+function getModelPath(model_name: string): string {
+  return new URL(`../assets/models/${model_name}.glb`, import.meta.url).href;
+}
+
+const loader = new GLTFLoader();
 const ROCK_GEOMETRY = new SphereGeometry(1, 6, 5);
 
 const ROCK_MATERIAL = new MeshStandardMaterial({
@@ -10,20 +16,23 @@ const ROCK_MATERIAL = new MeshStandardMaterial({
 
 export class Rock extends GameObject {
   constructor(coords: Vector3) {
-    const min_radius = 0.2;
-    const max_radius = 0.4;
-    const min_height = 0.1;
-    const max_height = 0.3;
-
-    const radius = min_radius + Math.random() * (max_radius - min_radius);
-    const height = min_height + Math.random() * (max_height - min_height);
-
-    const rock_mesh = new Mesh(ROCK_GEOMETRY, ROCK_MATERIAL);
-    rock_mesh.scale.set(radius, height, radius);
-    rock_mesh.position.set(0.5, height / 4, 0.5);
-
-    super(coords, rock_mesh);
+    super(coords, new Mesh());
 
     this.name = `Rock-(${coords.x},${coords.z})`;
+
+    const index = Math.floor(Math.random() * 3) + 1;
+    loader.load(getModelPath(`rock${index}`), (rock_model) => {
+      const variation = new Vector3(0.5, 0.3, 0.5);
+      // @ts-ignore
+      this.mesh.geometry = rock_model.scene.children[0].geometry;
+      this.mesh.scale.set(
+        1.0 + 2.0 * variation.x * (Math.random() - 0.5),
+        1.0 + 2.0 * variation.y * (Math.random() - 0.5),
+        1.0 + 2.0 * variation.z * (Math.random() - 0.5)
+      );
+      this.mesh.rotation.set(0, Math.random() * 2 * Math.PI, 0);
+      this.mesh.position.set(0.5, 0, 0.5);
+      this.mesh.material = ROCK_MATERIAL;
+    });
   }
 }
